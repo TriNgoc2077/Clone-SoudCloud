@@ -1,5 +1,7 @@
 <p align="center">
-  <a href="https://nextjs.org/" target="blank"><img src="https://nextjs.org/static/favicon/favicon-32x32.png" width="80" alt="Next.js Logo" /></a>
+    <a href="https://nextjs.org/" target="_blank">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/Nextjs-logo.svg" width="160" alt="Next.js Logo" />
+  </a>
 </p>
 
 <p align="center"><strong>A powerful React framework</strong> for building fast, modern, and full-stack web applications.</p>
