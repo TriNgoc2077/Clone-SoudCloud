@@ -1,0 +1,27 @@
+/* styles/audio-player.css */
+.rhap_play-pause-button,
+.rhap_forward-button,
+.rhap_rewind-button,
+.rhap_volume-button {
+  color: white;
+}
+.rhap_time {
+  color: white; 
+}
+.rhap_button-clear {
+  color: white;
+}
+.rhap_progress-filled {
+  background-color: #c3719e;
+}
+.rhap_volume-bar {
+  background-color: #c3719e;
+}
+
+.rhap_progress-indicator {
+  background: white;
+}
+
+.rhap_volume-indicator {
+  background: white;
+}
