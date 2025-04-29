@@ -1,95 +1,103 @@
 "use client";
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import Slider from 'react-slick';
-import {Settings} from 'react-slick';
-import { Box, Button, Divider } from '@mui/material'; 
-import { ChevronLeft, ChevronLeftOutlined, ChevronRight } from '@mui/icons-material';
-const MainSlider = () => {
-  const NextArrow = (props: any) => {
-    return (
-      <Button 
-        variant="outlined"
-        onClick={props.onClick}
-        sx={{
-          position: 'absolute',
-          right: 0,
-          top: '50%',
-          zIndex: 2,
-          minWidth: 30,
-          width: 35,
-        }}
-      >
-        <ChevronRight />
-      </Button>
-    )
-  }
-  
-  const PrevArrow = (props: any) => {
-    return (
-      <Button 
-        variant="outlined"
-        onClick={props.onClick}
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          zIndex: 2,
-          minWidth: 30,
-          width: 35,
-        }}
-      >
-        <ChevronLeft />
-      </Button>
-    )
-  }
-  const settings: Settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />
-  };
-  return (
-    <Box 
-      sx={{
-        margin: "0 50px",
-        ".abc": {
-          padding: "0 10px"
-        },
-        "h3": {
-          border: "1px solid #ccc",
-          padding: "20px",
-          height: "200px"
-        }
-      }}
-    >
-        <h2>Multiple Tracks</h2>
-        <Slider {...settings}>
-        <div className='abc'>
-          <h3>1</h3>
-        </div>
-        <div className='abc'>
-          <h3>2</h3>
-        </div>
-        <div className='abc'>
-          <h3>3</h3>
-        </div>
-        <div className='abc'>
-          <h3>4</h3>
-        </div>
-        <div className='abc'>
-          <h3>5</h3>
-        </div>
-        <div className='abc'>
-          <h3>6</h3>
-        </div>
-      </Slider>
-      <Divider />
-    </Box>
-    
-  );
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
+import { Settings } from "react-slick";
+import { Box, Button, Divider } from "@mui/material";
+import {
+	ChevronLeft,
+	ChevronLeftOutlined,
+	ChevronRight,
+} from "@mui/icons-material";
+import Link from "next/link";
+interface IProps {
+	title: string;
+	data: ITrackTop[];
 }
+const MainSlider = (props: IProps) => {
+	const NextArrow = (props: any) => {
+		return (
+			<Button
+				color="inherit"
+				variant="contained"
+				onClick={props.onClick}
+				sx={{
+					position: "absolute",
+					right: 0,
+					top: "25%",
+					zIndex: 2,
+					minWidth: 30,
+					width: 35,
+				}}
+			>
+				<ChevronRight />
+			</Button>
+		);
+	};
 
-export default MainSlider
+	const PrevArrow = (props: any) => {
+		return (
+			<Button
+				color="inherit"
+				variant="contained"
+				onClick={props.onClick}
+				sx={{
+					position: "absolute",
+					top: "25%",
+					zIndex: 2,
+					minWidth: 30,
+					width: 35,
+				}}
+			>
+				<ChevronLeft />
+			</Button>
+		);
+	};
+	const settings: Settings = {
+		dots: false,
+		infinite: true,
+		speed: 500,
+		slidesToShow: 5,
+		slidesToScroll: 1,
+		nextArrow: <NextArrow />,
+		prevArrow: <PrevArrow />,
+	};
+	return (
+		<Box
+			sx={{
+				margin: "0 50px",
+				".track": {
+					padding: "0 10px",
+
+					img: {
+						height: "150px",
+						width: "150px",
+					},
+				},
+			}}
+		>
+			<h2>{props.title}</h2>
+			<Slider {...settings}>
+				{props.data.map((item) => {
+					return (
+						<Link
+							href={`/track/${item._id}?audio=${item.trackUrl}`}
+						>
+							<div className="track" key={item._id}>
+								<img
+									src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${item.imgUrl}`}
+									alt={item.title}
+								/>
+								<h4>{item.title}</h4>
+								<h5>{item.description}</h5>
+							</div>
+						</Link>
+					);
+				})}
+			</Slider>
+			<Divider />
+		</Box>
+	);
+};
+
+export default MainSlider;

@@ -3,11 +3,11 @@ import { useHasMounted } from "@/utils/customHook";
 import { AppBar, Container } from "@mui/material";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
-import './style.css';
+import "./style.css";
 const Footer = () => {
 	const hasMounted = useHasMounted();
 	if (!hasMounted) return <></>;
-	console.log('>> check backend', process.env.NEXT_PUBLIC_BACKEND_URL);
+	console.log(">> check backend", process.env.NEXT_PUBLIC_BACKEND_URL);
 	return (
 		<AppBar
 			position="fixed"
@@ -16,7 +16,6 @@ const Footer = () => {
 		>
 			<Container sx={{ display: "flex", gap: "10px" }}>
 				<AudioPlayer
-					autoPlay
 					src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/tracks/hoidanit.mp3`}
 					onPlay={(e) => console.log("onPlay")}
 					style={{
