@@ -3,6 +3,9 @@ import { useWavesurfer } from "@/utils/customHook";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { WaveSurferOptions } from "wavesurfer.js";
+import PauseIcon from "@mui/icons-material/Pause";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+
 import "./wave.scss";
 
 const WaveTrack = () => {
@@ -21,7 +24,7 @@ const WaveTrack = () => {
 			const canvas = document.createElement("canvas");
 			const ctx = canvas.getContext("2d")!;
 			// Define the waveform gradient
-			gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 1);
+			gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.75);
 			gradient.addColorStop(0, "#656666"); // Top color
 			gradient.addColorStop(
 				(canvas.height * 0.7) / canvas.height,
@@ -73,6 +76,7 @@ const WaveTrack = () => {
 			// progressColor: "rgba(0, 0, 100, 0.5)",
 			progressColor: progressGradient,
 			barWidth: 2,
+			height: 100,
 			url: `/api?audio=${fileName}`,
 		};
 	}, []);
@@ -89,6 +93,9 @@ const WaveTrack = () => {
 			(e) => (hover.style.width = `${e.offsetX}px`)
 		);
 		const subscriptions = [
+			wavesurfer.once("interaction", () => {
+				wavesurfer.play();
+			}),
 			wavesurfer.on("play", () => setIsPlaying(true)),
 			wavesurfer.on("pause", () => setIsPlaying(false)),
 			wavesurfer.on("decode", (duration) => {
@@ -118,14 +125,122 @@ const WaveTrack = () => {
 	};
 
 	return (
-		<div ref={containerRef} className="wave-form-container">
-			<div className="time">{time}</div>
-			<div className="duration">{duration}</div>
-			<div className="hover-wave" ref={hoverRef}></div>
-			<div>
-				<button onClick={() => onPlayClick()}>
-					{wavesurfer?.isPlaying() === true ? "Pause" : "Play"}
-				</button>
+		<div style={{ marginTop: 20 }}>
+			<div
+				style={{
+					display: "flex",
+					gap: 15,
+					padding: 20,
+					height: 400,
+					background:
+						"linear-gradient(135deg, rgb(106, 112, 67) 0%, rgb(11, 15, 20) 100%",
+				}}
+			>
+				<div
+					className="left"
+					style={{
+						width: "75%",
+						height: "calc(100% - 10px)",
+						display: "flex",
+						flexDirection: "column",
+						justifyContent: "space-between",
+					}}
+				>
+					<div className="info" style={{ display: "flex" }}>
+						<div>
+							<div
+								onClick={() => onPlayClick()}
+								style={{
+									borderRadius: "50%",
+									background: "#f50",
+									height: "50px",
+									width: "50px",
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "center",
+									cursor: "pointer",
+								}}
+							>
+								{isPlaying === true ? (
+									<PauseIcon
+										sx={{ fontSize: 30, color: "white" }}
+									/>
+								) : (
+									<PlayArrowIcon
+										sx={{ fontSize: 30, color: "white" }}
+									/>
+								)}
+							</div>
+						</div>
+						<div style={{ marginLeft: 20 }}>
+							<div
+								style={{
+									padding: "0 5px",
+									background: "#333",
+									fontSize: 30,
+									width: "fit-content",
+									color: "white",
+								}}
+							>
+								Song...
+							</div>
+							<div
+								style={{
+									padding: "0 5px",
+									marginTop: 10,
+									background: "#333",
+									fontSize: 20,
+									width: "fit-content",
+									color: "white",
+								}}
+							>
+								Singer
+							</div>
+						</div>
+					</div>
+					<div ref={containerRef} className="wave-form-container">
+						<div className="time">{time}</div>
+						<div className="duration">{duration}</div>
+						<div className="hover-wave" ref={hoverRef}></div>
+						<div
+							className="overlay"
+							style={{
+								position: "absolute",
+								height: "30px",
+								width: "100%",
+								bottom: 0,
+								backdropFilter: "brightness(0.5)",
+							}}
+						></div>
+					</div>
+				</div>
+				<div
+					className="right"
+					style={{
+						width: "25%",
+						padding: 15,
+						display: "flex",
+						alignItems: "center",
+					}}
+				>
+					<div
+						style={{ background: "#ccc", width: 250, height: 250 }}
+					>
+						<img
+							// src={
+							// 	process.env.NEXT_PUBLIC_BACKEND_URL_IMAGES +
+							// 	currentTrack.imgUrl
+							// }
+							alt=""
+							style={{
+								width: 250,
+								height: 250,
+								overflow: "hidden",
+								background: "white",
+							}}
+						/>
+					</div>
+				</div>
 			</div>
 		</div>
 	);
