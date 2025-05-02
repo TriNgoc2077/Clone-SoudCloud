@@ -25,10 +25,10 @@ const WaveTrack = () => {
 			const ctx = canvas.getContext("2d")!;
 			// Define the waveform gradient
 			gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.75);
-			gradient.addColorStop(0, "#656666"); // Top color
+			gradient.addColorStop(0, "rgb(145, 108, 167)"); // Top color
 			gradient.addColorStop(
 				(canvas.height * 0.7) / canvas.height,
-				"#656666"
+				"rgb(161, 159, 176)"
 			); // Top color
 			gradient.addColorStop(
 				(canvas.height * 0.7 + 1) / canvas.height,
@@ -51,14 +51,14 @@ const WaveTrack = () => {
 				0,
 				canvas.height * 1.35
 			);
-			progressGradient.addColorStop(0, "#EE772F"); // Top color
+			progressGradient.addColorStop(0, "rgb(85, 175, 139)"); // Top color
 			progressGradient.addColorStop(
 				(canvas.height * 0.7) / canvas.height,
-				"#EB4926"
+				"rgb(184, 137, 94)"
 			); // Top color
 			progressGradient.addColorStop(
 				(canvas.height * 0.7 + 1) / canvas.height,
-				"#ffffff"
+				"rgb(131, 103, 72)"
 			); // White line
 			progressGradient.addColorStop(
 				(canvas.height * 0.7 + 2) / canvas.height,
@@ -133,8 +133,9 @@ const WaveTrack = () => {
 					padding: 20,
 					height: 400,
 					background:
-						"linear-gradient(135deg, rgb(106, 112, 67) 0%, rgb(11, 15, 20) 100%",
+						"linear-gradient(135deg, rgb(162, 139, 175) 0%, rgb(16, 11, 19) 100%",
 				}}
+				onClick={() => onPlayClick()}
 			>
 				<div
 					className="left"
@@ -149,10 +150,10 @@ const WaveTrack = () => {
 					<div className="info" style={{ display: "flex" }}>
 						<div>
 							<div
-								onClick={() => onPlayClick()}
+								onClick={() => onPlayClick}
 								style={{
 									borderRadius: "50%",
-									background: "#f50",
+									background: "rgb(0, 0, 0)",
 									height: "50px",
 									width: "50px",
 									display: "flex",
@@ -198,7 +199,13 @@ const WaveTrack = () => {
 							</div>
 						</div>
 					</div>
-					<div ref={containerRef} className="wave-form-container">
+					<div
+						ref={containerRef}
+						className="wave-form-container"
+						onClick={(e) => {
+							e.stopPropagation();
+						}}
+					>
 						<div className="time">{time}</div>
 						<div className="duration">{duration}</div>
 						<div className="hover-wave" ref={hoverRef}></div>
@@ -207,11 +214,25 @@ const WaveTrack = () => {
 							style={{
 								position: "absolute",
 								height: "30px",
-								width: "100%",
+								// width: "100%",
 								bottom: 0,
+								color: "rgb(162, 139, 175)",
 								backdropFilter: "brightness(0.5)",
 							}}
 						></div>
+						<div className="comments">
+							<img
+								src={`http://localhost:8000/images/chill1.png`}
+								alt=""
+								style={{
+									height: 20,
+									width: 20,
+									position: "relative",
+									top: "100px",
+									zIndex: 20,
+								}}
+							/>
+						</div>
 					</div>
 				</div>
 				<div
