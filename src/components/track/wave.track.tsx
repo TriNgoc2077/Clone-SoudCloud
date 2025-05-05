@@ -288,9 +288,10 @@ const WaveTrack = () => {
 											tooltip: {
 												sx: {
 													width: 170,
-													height: 100,
+													height: 70,
 													fontSize: "18px",
 													backgroundColor: "pink",
+													color: "rgb(116, 106, 124)",
 												},
 											},
 										}}
