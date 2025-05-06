@@ -234,7 +234,7 @@ export default function AppHeader() {
 							}}
 							onClick={() => handleRedirectHome()}
 						>
-							MUI
+							Sound Cloud
 						</Typography>
 						<Search>
 							<SearchIconWrapper>
@@ -270,9 +270,7 @@ export default function AppHeader() {
 								</>
 							) : (
 								<>
-									<Link href={"#"} onClick={() => signIn()}>
-										Login
-									</Link>
+									<Link href="auth/signin">Login</Link>
 								</>
 							)}
 						</Box>

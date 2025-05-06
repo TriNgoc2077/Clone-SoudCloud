@@ -46,7 +46,7 @@ export const authOptions: AuthOptions = {
 					return res.data as any;
 				}
 				// Return null if user data could not be retrieved
-				return null;
+				throw new Error(res.message as string);
 			},
 		}),
 		GithubProvider({
@@ -94,6 +94,9 @@ export const authOptions: AuthOptions = {
 			return session;
 		},
 	},
+	// pages: {
+	// 	signIn: "auth/signin",
+	// },
 };
 const handler = NextAuth(authOptions);
 
