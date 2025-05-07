@@ -3,15 +3,61 @@ import { FileWithPath, useDropzone } from "react-dropzone";
 import "./theme.css";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import ButtonFileUpload from "./button.upload";
+import { sendRequestFile } from "@/utils/api";
+import { useSession } from "next-auth/react";
+import axios from "axios";
+interface IProps {
+	setValue: (v: number) => void;
+	setTrackUpload: any;
+}
+const Step1 = (props: IProps) => {
+	const { data: session } = useSession();
+	const [percent, setPercent] = useState(0);
 
-const Step1 = () => {
-	const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
-		console.log(acceptedFiles);
-	}, []);
+	const onDrop = useCallback(
+		async (acceptedFiles: FileWithPath[]) => {
+			if (acceptedFiles && acceptedFiles[0]) {
+				props.setValue(1);
+				const audio = acceptedFiles[0];
+				const formData = new FormData();
+				formData.append("fileUpload", audio);
+				try {
+					const res = await axios.post(
+						"http://localhost:8000/api/v1/files/upload",
+						formData,
+						{
+							headers: {
+								Authorization: `Bearer ${session?.access_token}`,
+								target_type: "tracks",
+								delay: 3500,
+							},
+							onUploadProgress: (ProgressEvent) => {
+								let percentCompleted = Math.floor(
+									(ProgressEvent.loaded * 100) /
+										ProgressEvent.total!
+								);
+								props.setTrackUpload({
+									fileName: acceptedFiles[0].name,
+									percent: percentCompleted,
+								});
+							},
+						}
+					);
+					console.log(res.data.data.fileName);
+				} catch (error: any) {
+					console.log(error?.response?.data);
+				}
+			}
+		},
+		[session]
+	);
 	const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
 		onDrop,
+		accept: {
+			audio: [".mp3", ".m4a", ".wav", ".webm"],
+		},
 	});
 
 	const files = acceptedFiles.map((file: FileWithPath) => (

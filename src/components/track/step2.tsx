@@ -48,7 +48,14 @@ function LinearProgressWithLabel(
 		</Box>
 	);
 }
-const Step2 = () => {
+interface IProps {
+	trackUpload: {
+		fileName: string;
+		percent: number;
+	};
+}
+const Step2 = (props: IProps) => {
+	const { trackUpload } = props;
 	const [progress, setProgress] = useState(10);
 	const [category, setCategory] = useState("");
 
@@ -68,8 +75,12 @@ const Step2 = () => {
 
 	return (
 		<>
-			<div>Your file upload progress...</div>
-			<LinearProgressWithLabel value={progress} />
+			<div>
+				{trackUpload.percent === 100
+					? trackUpload.fileName
+					: "Uploading your track..."}
+			</div>
+			<LinearProgressWithLabel value={trackUpload.percent} />
 			<Grid container spacing={2} mt={5}>
 				<Grid
 					item
@@ -101,16 +112,16 @@ const Step2 = () => {
 						variant="outlined"
 						margin="dense"
 						sx={{
+							"& label.Mui-focused": {
+								color: "#ff69b4",
+							},
 							"& .MuiOutlinedInput-root": {
 								borderRadius: 2,
-								transition: "box-shadow 0.3s",
-								"&:hover": {
-									boxShadow:
-										"0 0 0 2px rgba(102, 126, 234, 0.2)",
+								"&.Mui-focused fieldset": {
+									borderColor: "#ff69b4",
 								},
-								"&.Mui-focused": {
-									boxShadow:
-										"0 0 0 2px rgba(102, 126, 234, 0.5)",
+								"&:hover fieldset": {
+									borderColor: "#f7a8d6",
 								},
 							},
 						}}
@@ -122,21 +133,38 @@ const Step2 = () => {
 						margin="dense"
 						sx={{
 							mt: 3,
+							"& label.Mui-focused": {
+								color: "#ff69b4",
+							},
 							"& .MuiOutlinedInput-root": {
 								borderRadius: 2,
-								transition: "box-shadow 0.3s",
-								"&:hover": {
-									boxShadow:
-										"0 0 0 2px rgba(102, 126, 234, 0.2)",
+								"&.Mui-focused fieldset": {
+									borderColor: "#ff69b4",
 								},
-								"&.Mui-focused": {
-									boxShadow:
-										"0 0 0 2px rgba(102, 126, 234, 0.5)",
+								"&:hover fieldset": {
+									borderColor: "#f7a8d6",
 								},
 							},
 						}}
 					/>
-					<FormControl fullWidth sx={{ mt: 3 }}>
+					<FormControl
+						fullWidth
+						sx={{
+							mt: 3,
+							"& label.Mui-focused": {
+								color: "#ff69b4",
+							},
+							"& .MuiOutlinedInput-root": {
+								borderRadius: 2,
+								"&.Mui-focused fieldset": {
+									borderColor: "#ff69b4",
+								},
+								"&:hover fieldset": {
+									borderColor: "#f7a8d6",
+								},
+							},
+						}}
+					>
 						<InputLabel id="demo-simple-select-label">
 							Category
 						</InputLabel>
