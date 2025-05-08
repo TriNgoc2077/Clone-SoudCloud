@@ -4,13 +4,14 @@ import "./theme.css";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import { useCallback, useState } from "react";
-import ButtonFileUpload from "./button.upload";
+import { ButtonFileAudioUpload } from "./button.upload";
 import { sendRequestFile } from "@/utils/api";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 interface IProps {
 	setValue: (v: number) => void;
 	setTrackUpload: any;
+	trackUpload: any;
 }
 const Step1 = (props: IProps) => {
 	const { data: session } = useSession();
@@ -31,7 +32,7 @@ const Step1 = (props: IProps) => {
 							headers: {
 								Authorization: `Bearer ${session?.access_token}`,
 								target_type: "tracks",
-								delay: 3500,
+								delay: 1500,
 							},
 							onUploadProgress: (ProgressEvent) => {
 								let percentCompleted = Math.floor(
@@ -39,13 +40,18 @@ const Step1 = (props: IProps) => {
 										ProgressEvent.total!
 								);
 								props.setTrackUpload({
+									...props.trackUpload,
 									fileName: acceptedFiles[0].name,
 									percent: percentCompleted,
 								});
 							},
 						}
 					);
-					console.log(res.data.data.fileName);
+
+					props.setTrackUpload((prevState: any) => ({
+						...prevState,
+						uploadedTrackName: res.data.data.fileName,
+					}));
 				} catch (error: any) {
 					console.log(error?.response?.data);
 				}
@@ -70,7 +76,7 @@ const Step1 = (props: IProps) => {
 		<section className="container">
 			<div {...getRootProps({ className: "dropzone" })}>
 				<input {...getInputProps()} />
-				<ButtonFileUpload />
+				<ButtonFileAudioUpload />
 				<p>Drag and drop some files here, or click to select files</p>
 			</div>
 			<aside>

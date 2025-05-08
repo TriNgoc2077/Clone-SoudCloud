@@ -40,6 +40,7 @@ const UploadTabs = () => {
 	const [trackUpload, setTrackUpload] = React.useState({
 		fileName: "",
 		percent: 0,
+		uploadedTrackName: "",
 	});
 
 	const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -47,7 +48,14 @@ const UploadTabs = () => {
 	};
 
 	return (
-		<Box sx={{ width: "100%", border: "1px solid #ddd", mt: 5 }}>
+		<Box
+			sx={{
+				width: "100%",
+				border: "1px solid #ddd",
+				mt: 5,
+				height: "100%",
+			}}
+		>
 			<Box sx={{ borderBottom: 1, borderColor: "divider" }}>
 				<Tabs
 					value={value}
@@ -69,7 +77,7 @@ const UploadTabs = () => {
 						}}
 					/>
 					<Tab
-						label="Basic Information"
+						label="Your Track Information"
 						{...a11yProps(1)}
 						sx={{
 							"&.Mui-selected": {
@@ -80,7 +88,11 @@ const UploadTabs = () => {
 				</Tabs>
 			</Box>
 			<CustomTabPanel value={value} index={0}>
-				<Step1 setValue={setValue} setTrackUpload={setTrackUpload} />
+				<Step1
+					setValue={setValue}
+					setTrackUpload={setTrackUpload}
+					trackUpload={trackUpload}
+				/>
 			</CustomTabPanel>
 			<CustomTabPanel value={value} index={1}>
 				<Step2 trackUpload={trackUpload} />
