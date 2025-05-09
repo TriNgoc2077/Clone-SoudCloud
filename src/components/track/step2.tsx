@@ -18,11 +18,9 @@ import LinearProgress, {
 } from "@mui/material/LinearProgress";
 import { useEffect, useState } from "react";
 import { ButtonFileImageUpload } from "./button.upload";
-import { SmartButtonOutlined } from "@mui/icons-material";
-import { imageConfigDefault } from "next/dist/shared/lib/image-config";
-import axios from "axios";
 import { sendRequest } from "@/utils/api";
 import { useSession } from "next-auth/react";
+import { useToast } from "@/utils/toast";
 
 function LinearProgressWithLabel(
 	props: LinearProgressProps & { value: number }
@@ -60,6 +58,7 @@ interface IProps {
 		percent: number;
 		uploadedTrackName: string;
 	};
+	setValue: (v: number) => void;
 }
 
 interface INewTrack {
@@ -78,13 +77,9 @@ const Step2 = (props: IProps) => {
 		imgUrl: "",
 		category: "",
 	});
-	const { trackUpload } = props;
+	const { trackUpload, setValue } = props;
 	const [progress, setProgress] = useState(10);
-	const [resMessage, setResMessage] = useState<string>("");
-	const [openMessage, setOpenMessage] = useState<boolean>(false);
-
-	const [errMessage, seterrMessage] = useState<string>("");
-	const [openError, setOpenError] = useState<boolean>(false);
+	const toast = useToast();
 	// const [category, setCategory] = useState("");
 	const catergory = [
 		{
@@ -124,17 +119,10 @@ const Step2 = (props: IProps) => {
 			},
 		});
 		if (res.data) {
-			setResMessage("You added new track. Enjoy !");
-			setOpenMessage(true);
-			setTimeout(() => {
-				setOpenMessage(false);
-			}, 3500);
+			toast.success("You added new track. Enjoy !");
+			setValue(0);
 		} else {
-			seterrMessage(res.message[0]);
-			setOpenError(true);
-			setTimeout(() => {
-				setOpenError(false);
-			}, 3500);
+			toast.error(res.message);
 		}
 	};
 	return (
@@ -287,44 +275,20 @@ const Step2 = (props: IProps) => {
 						variant="outlined"
 						sx={{
 							mt: 5,
-							borderColor: "pink",
-							color: "rgb(101, 58, 111)",
+							backgroundColor: "pink",
+							border: "1px solid pink",
+							color: "white",
 							":hover": {
-								borderColor: "#ff69b4",
 								backgroundColor: "#ff69b4",
-								color: "rgb(101, 58, 111)",
+								border: "1px solid #ff69b4",
 							},
 						}}
 						onClick={() => handleSubmitForm()}
 					>
-						SAVE
+						SAVE TRACK
 					</Button>
 				</Grid>
 			</Grid>
-			<Snackbar
-				open={openMessage}
-				// autoHideDuration={4000}
-				// onClose={handleClose}
-				message="Note archived"
-				// action={action}
-				anchorOrigin={{ vertical: "top", horizontal: "center" }}
-			>
-				<Alert severity="success" onClose={() => setOpenMessage(false)}>
-					{resMessage}
-				</Alert>
-			</Snackbar>
-			<Snackbar
-				open={openError}
-				// autoHideDuration={4000}
-				// onClose={handleClose}
-				message="Note archived"
-				// action={action}
-				anchorOrigin={{ vertical: "top", horizontal: "center" }}
-			>
-				<Alert severity="error" onClose={() => setOpenError(false)}>
-					{errMessage}
-				</Alert>
-			</Snackbar>
 		</>
 	);
 };

@@ -70,6 +70,7 @@ const UploadTabs = () => {
 					<Tab
 						label="Tracks"
 						{...a11yProps(0)}
+						disabled={value !== 0}
 						sx={{
 							"&.Mui-selected": {
 								color: "#ff69b4",
@@ -78,6 +79,7 @@ const UploadTabs = () => {
 					/>
 					<Tab
 						label="Your Track Information"
+						disabled={value !== 1}
 						{...a11yProps(1)}
 						sx={{
 							"&.Mui-selected": {
@@ -95,7 +97,7 @@ const UploadTabs = () => {
 				/>
 			</CustomTabPanel>
 			<CustomTabPanel value={value} index={1}>
-				<Step2 trackUpload={trackUpload} />
+				<Step2 trackUpload={trackUpload} setValue={setValue} />
 			</CustomTabPanel>
 		</Box>
 	);
