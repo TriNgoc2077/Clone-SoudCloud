@@ -121,7 +121,7 @@ export default function AppHeader() {
 			<MenuItem onClick={handleClose}>
 				<Avatar />
 				<Link
-					href={"/profile"}
+					href={`/profile/${session?.user._id}`}
 					style={{
 						color: "unset",
 						textDecoration: "none",
