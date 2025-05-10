@@ -1,20 +1,35 @@
 "use client";
 import { useWavesurfer } from "@/utils/customHook";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState, useMemo, useCallback } from "react";
+import React, {
+	useEffect,
+	useRef,
+	useState,
+	useMemo,
+	useCallback,
+} from "react";
 import { WaveSurferOptions } from "wavesurfer.js";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 import "./wave.scss";
 import { Tooltip } from "@mui/material";
+import { TrackContext } from "@/lib/track.wrapper";
 
-const WaveTrack = () => {
+interface IProps {
+	track: ITrackTop | null;
+}
+const WaveTrack = (props: IProps) => {
+	const { track } = props;
 	const [isPlaying, setIsPlaying] = useState<boolean>(false);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const hoverRef = useRef<HTMLDivElement>(null);
 	const [time, setTime] = useState<string>("0:00");
 	const [duration, setDuration] = useState<string>("0:00");
+
+	const { currentTrack, setCurrentTrack } = React.useContext(
+		TrackContext
+	) as ITrackContext;
 
 	const searchParams = useSearchParams();
 	const fileName = searchParams.get("audio");
@@ -111,9 +126,22 @@ const WaveTrack = () => {
 		};
 	}, [wavesurfer]);
 
+	useEffect(() => {
+		if (currentTrack.isPlaying && wavesurfer) {
+			wavesurfer.pause();
+		}
+	}, [currentTrack]);
+
+	useEffect(() => {
+		if (track?._id && !currentTrack._id) {
+			setCurrentTrack({ ...track, isPlaying: false });
+		}
+	}, [track]);
+
 	const onPlayClick = useCallback(() => {
-		if (wavesurfer) {
+		if (wavesurfer && track) {
 			wavesurfer.isPlaying() ? wavesurfer.pause() : wavesurfer.play();
+			setCurrentTrack({ ...currentTrack, isPlaying: false });
 		}
 	}, [wavesurfer]);
 
@@ -175,11 +203,13 @@ const WaveTrack = () => {
 			content: "just a comment 7",
 		},
 	];
+
 	const calcLeft = (moment: number) => {
 		const hardCodeDuration = 199;
 		const percent = (moment / hardCodeDuration) * 100;
 		return `${percent}%`;
 	};
+
 	return (
 		<div style={{ marginTop: 20 }}>
 			<div
@@ -191,7 +221,9 @@ const WaveTrack = () => {
 					background:
 						"linear-gradient(135deg, rgb(162, 139, 175) 0%, rgb(16, 11, 19) 100%",
 				}}
-				onClick={() => onPlayClick()}
+				onClick={() => {
+					onPlayClick();
+				}}
 			>
 				<div
 					className="left"
@@ -206,7 +238,6 @@ const WaveTrack = () => {
 					<div className="info" style={{ display: "flex" }}>
 						<div>
 							<div
-								onClick={() => onPlayClick}
 								style={{
 									borderRadius: "50%",
 									background: "rgb(0, 0, 0)",
@@ -239,7 +270,7 @@ const WaveTrack = () => {
 									color: "white",
 								}}
 							>
-								Song...
+								{track?.title || "Song Name"}
 							</div>
 							<div
 								style={{
@@ -251,7 +282,7 @@ const WaveTrack = () => {
 									color: "white",
 								}}
 							>
-								Singer
+								{track?.description || "Singer"}
 							</div>
 						</div>
 					</div>
@@ -283,6 +314,7 @@ const WaveTrack = () => {
 							{arrComments.map((item) => {
 								return (
 									<Tooltip
+										key={item.id}
 										title={item.content}
 										componentsProps={{
 											tooltip: {
@@ -333,11 +365,9 @@ const WaveTrack = () => {
 						style={{ background: "#ccc", width: 250, height: 250 }}
 					>
 						<img
-							// src={
-							// 	process.env.NEXT_PUBLIC_BACKEND_URL_IMAGES +
-							// 	currentTrack.imgUrl
-							// }
-							alt=""
+							onClick={(e) => e.stopPropagation()}
+							src={`${process.env.NEXT_PUBLIC_BACKEND_URL_IMAGES}/${track?.imgUrl}`}
+							alt="Song image"
 							style={{
 								width: 250,
 								height: 250,

@@ -4,25 +4,25 @@ import { AppBar, Box, Container } from "@mui/material";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import "./style.css";
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { TrackContext } from "@/lib/track.wrapper";
 const Footer = () => {
-	const playerRef = useRef(null);
-	const hasMounted = useHasMounted();
-	if (!hasMounted) return <></>;
-	console.log(">> check backend", process.env.NEXT_PUBLIC_BACKEND_URL);
 	const { currentTrack, setCurrentTrack } = useContext(
 		TrackContext
 	) as ITrackContext;
-	console.log(currentTrack);
-	//@ts-ignore
-	if (currentTrack.isPlaying) {
+	const playerRef = useRef(null);
+	const hasMounted = useHasMounted();
+	useEffect(() => {
 		//@ts-ignore
-		playerRef?.current?.audio.current.play();
-	} else {
-		//@ts-ignore
-		playerRef?.current?.audio.current.pause();
-	}
+		if (currentTrack.isPlaying === false) {
+			//@ts-ignore
+			playerRef?.current?.audio.current.pause();
+		} else {
+			//@ts-ignore
+			playerRef?.current?.audio.current.play();
+		}
+	}, [currentTrack]);
+	if (!hasMounted) return <></>;
 	return (
 		<div style={{ marginTop: 75 }}>
 			<AppBar

@@ -34,7 +34,15 @@ const ProfileTrack = (props: IProps) => {
 				sx={{ display: "flex", flexDirection: "column", marginLeft: 3 }}
 			>
 				<CardContent sx={{ flex: "1 0 auto" }}>
-					<Typography component="div" variant="h5">
+					<Typography
+						component="a"
+						variant="h5"
+						href={`/track/${data._id}?audio=${data.trackUrl}&id=${data._id}`}
+						style={{
+							textDecoration: "none",
+							color: "rgb(52, 52, 52)",
+						}}
+					>
 						{data.title}
 					</Typography>
 					<Typography

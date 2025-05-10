@@ -4,11 +4,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { Settings } from "react-slick";
 import { Box, Button, Divider } from "@mui/material";
-import {
-	ChevronLeft,
-	ChevronLeftOutlined,
-	ChevronRight,
-} from "@mui/icons-material";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import Link from "next/link";
 interface IProps {
 	title: string;
@@ -81,7 +77,7 @@ const MainSlider = (props: IProps) => {
 				{props.data.map((item) => {
 					return (
 						<Link
-							href={`/track/${item._id}?audio=${item.trackUrl}`}
+							href={`/track/${item._id}?audio=${item.trackUrl}&id=${item._id}`}
 						>
 							<div className="track" key={item._id}>
 								<img
