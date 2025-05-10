@@ -9,7 +9,6 @@ const ProfilePage = async ({ params }: { params: { slug: string } }) => {
 		body: { id: params.slug },
 	});
 	const tracks = res.data?.result ?? [];
-	console.log(res);
 	return (
 		<Container>
 			<Grid container spacing={5}>

@@ -9,14 +9,18 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
+import { TrackContext } from "@/lib/track.wrapper";
 interface IProps {
 	data: ITrackTop;
 }
 const ProfileTrack = (props: IProps) => {
 	const { data } = props;
 	const theme = useTheme();
-
+	const { currentTrack, setCurrentTrack } = React.useContext(
+		TrackContext
+	) as ITrackContext;
 	return (
 		<Card
 			sx={{
@@ -38,7 +42,7 @@ const ProfileTrack = (props: IProps) => {
 						component="div"
 						sx={{ color: "text.secondary" }}
 					>
-						Mac Miller
+						{data.description}
 					</Typography>
 				</CardContent>
 				<Box
@@ -51,8 +55,24 @@ const ProfileTrack = (props: IProps) => {
 							<SkipPreviousIcon />
 						)}
 					</IconButton>
-					<IconButton aria-label="play/pause">
-						<PlayArrowIcon sx={{ height: 38, width: 38 }} />
+					<IconButton
+						aria-label="play/pause"
+						onClick={() => {
+							if (data._id !== currentTrack._id) {
+								currentTrack.isPlaying = false;
+							}
+							setCurrentTrack({
+								...data,
+								isPlaying: !currentTrack.isPlaying,
+							});
+						}}
+					>
+						{data._id === currentTrack._id &&
+						currentTrack.isPlaying ? (
+							<PauseIcon sx={{ height: 38, width: 38 }} />
+						) : (
+							<PlayArrowIcon sx={{ height: 38, width: 38 }} />
+						)}
 					</IconButton>
 					<IconButton aria-label="next">
 						{theme.direction === "rtl" ? (
