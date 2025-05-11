@@ -9,10 +9,24 @@ const DetailTrackPage = async (props: any) => {
 		url: `http://localhost:8000/api/v1/tracks/${params.slug}`,
 		method: "GET",
 	});
+
+	const resComments = await sendRequest<IBackendRes<any>>({
+		url: `http://localhost:8000/api/v1/tracks/comments`,
+		method: "POST",
+		queryParams: {
+			trackId: params.slug,
+			pageSize: 25,
+			current: 1,
+			sort: "-createdAt",
+		},
+	});
 	return (
 		<Container>
 			<div>
-				<WaveTrack track={res.data ?? null} />
+				<WaveTrack
+					track={res.data ?? null}
+					comments={resComments.data?.result ?? null}
+				/>
 			</div>
 		</Container>
 	);

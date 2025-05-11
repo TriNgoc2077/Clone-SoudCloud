@@ -13,11 +13,14 @@ import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 import "./wave.scss";
-import { Tooltip } from "@mui/material";
+import { Box, Tooltip } from "@mui/material";
 import { TrackContext } from "@/lib/track.wrapper";
+import { fetchDefaultImages } from "@/utils/api";
+import CommentTrack from "./comment.track";
 
 interface IProps {
 	track: ITrackTop | null;
+	comments: IComment[] | null;
 }
 const WaveTrack = (props: IProps) => {
 	const { track } = props;
@@ -152,57 +155,58 @@ const WaveTrack = (props: IProps) => {
 		const paddedSeconds = `0${secondsRemainder}`.slice(-2);
 		return `${minutes}:${paddedSeconds}`;
 	};
-	const arrComments = [
-		{
-			id: 1,
-			avatar: "http://localhost:8000/images/chill1.png",
-			moment: 5,
-			user: "username 1",
-			content: "just a comment 1",
-		},
-		{
-			id: 2,
-			avatar: "http://localhost:8000/images/chill1.png",
-			moment: 10,
-			user: "username 2",
-			content: "just a comment 2",
-		},
-		{
-			id: 3,
-			avatar: "http://localhost:8000/images/chill1.png",
-			moment: 15,
-			user: "username 3",
-			content: "just a comment 3",
-		},
-		{
-			id: 4,
-			avatar: "http://localhost:8000/images/chill1.png",
-			moment: 17,
-			user: "username 4",
-			content: "just a comment 4",
-		},
-		{
-			id: 5,
-			avatar: "http://localhost:8000/images/chill1.png",
-			moment: 50,
-			user: "username 5",
-			content: "just a comment 5",
-		},
-		{
-			id: 6,
-			avatar: "http://localhost:8000/images/chill1.png",
-			moment: 100,
-			user: "username 6",
-			content: "just a comment 6",
-		},
-		{
-			id: 7,
-			avatar: "http://localhost:8000/images/chill1.png",
-			moment: 180,
-			user: "username 7",
-			content: "just a comment 7",
-		},
-	];
+	// const arrComments = [
+	// 	{
+	// 		id: 1,
+	// 		avatar: "http://localhost:8000/images/chill1.png",
+	// 		moment: 5,
+	// 		user: "username 1",
+	// 		content: "just a comment 1",
+	// 	},
+	// 	{
+	// 		id: 2,
+	// 		avatar: "http://localhost:8000/images/chill1.png",
+	// 		moment: 10,
+	// 		user: "username 2",
+	// 		content: "just a comment 2",
+	// 	},
+	// 	{
+	// 		id: 3,
+	// 		avatar: "http://localhost:8000/images/chill1.png",
+	// 		moment: 15,
+	// 		user: "username 3",
+	// 		content: "just a comment 3",
+	// 	},
+	// 	{
+	// 		id: 4,
+	// 		avatar: "http://localhost:8000/images/chill1.png",
+	// 		moment: 17,
+	// 		user: "username 4",
+	// 		content: "just a comment 4",
+	// 	},
+	// 	{
+	// 		id: 5,
+	// 		avatar: "http://localhost:8000/images/chill1.png",
+	// 		moment: 50,
+	// 		user: "username 5",
+	// 		content: "just a comment 5",
+	// 	},
+	// 	{
+	// 		id: 6,
+	// 		avatar: "http://localhost:8000/images/chill1.png",
+	// 		moment: 100,
+	// 		user: "username 6",
+	// 		content: "just a comment 6",
+	// 	},
+	// 	{
+	// 		id: 7,
+	// 		avatar: "http://localhost:8000/images/chill1.png",
+	// 		moment: 180,
+	// 		user: "username 7",
+	// 		content: "just a comment 7",
+	// 	},
+	// ];
+	const comments = props.comments ?? [];
 
 	const calcLeft = (moment: number) => {
 		const hardCodeDuration = 199;
@@ -311,10 +315,10 @@ const WaveTrack = (props: IProps) => {
 							className="comments"
 							style={{ position: "relative" }}
 						>
-							{arrComments.map((item) => {
+							{comments.map((item) => {
 								return (
 									<Tooltip
-										key={item.id}
+										key={item._id}
 										title={item.content}
 										componentsProps={{
 											tooltip: {
@@ -335,7 +339,9 @@ const WaveTrack = (props: IProps) => {
 													item.moment
 												);
 											}}
-											src={`http://localhost:8000/images/chill1.png`}
+											src={fetchDefaultImages(
+												item.user.type
+											)}
 											alt=""
 											style={{
 												height: 20,
@@ -364,20 +370,22 @@ const WaveTrack = (props: IProps) => {
 					<div
 						style={{ background: "#ccc", width: 250, height: 250 }}
 					>
-						<img
+						<Box
+							component="img"
 							onClick={(e) => e.stopPropagation()}
 							src={`${process.env.NEXT_PUBLIC_BACKEND_URL_IMAGES}/${track?.imgUrl}`}
 							alt="Song image"
-							style={{
-								width: 250,
-								height: 250,
-								overflow: "hidden",
-								background: "white",
+							sx={{
+								width: "100%",
+								maxWidth: 250,
+								height: "auto",
+								background: "0$",
 							}}
 						/>
 					</div>
 				</div>
 			</div>
+			<CommentTrack comments={comments} track={track} />
 		</div>
 	);
 };
