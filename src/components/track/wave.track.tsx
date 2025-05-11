@@ -155,62 +155,11 @@ const WaveTrack = (props: IProps) => {
 		const paddedSeconds = `0${secondsRemainder}`.slice(-2);
 		return `${minutes}:${paddedSeconds}`;
 	};
-	// const arrComments = [
-	// 	{
-	// 		id: 1,
-	// 		avatar: "http://localhost:8000/images/chill1.png",
-	// 		moment: 5,
-	// 		user: "username 1",
-	// 		content: "just a comment 1",
-	// 	},
-	// 	{
-	// 		id: 2,
-	// 		avatar: "http://localhost:8000/images/chill1.png",
-	// 		moment: 10,
-	// 		user: "username 2",
-	// 		content: "just a comment 2",
-	// 	},
-	// 	{
-	// 		id: 3,
-	// 		avatar: "http://localhost:8000/images/chill1.png",
-	// 		moment: 15,
-	// 		user: "username 3",
-	// 		content: "just a comment 3",
-	// 	},
-	// 	{
-	// 		id: 4,
-	// 		avatar: "http://localhost:8000/images/chill1.png",
-	// 		moment: 17,
-	// 		user: "username 4",
-	// 		content: "just a comment 4",
-	// 	},
-	// 	{
-	// 		id: 5,
-	// 		avatar: "http://localhost:8000/images/chill1.png",
-	// 		moment: 50,
-	// 		user: "username 5",
-	// 		content: "just a comment 5",
-	// 	},
-	// 	{
-	// 		id: 6,
-	// 		avatar: "http://localhost:8000/images/chill1.png",
-	// 		moment: 100,
-	// 		user: "username 6",
-	// 		content: "just a comment 6",
-	// 	},
-	// 	{
-	// 		id: 7,
-	// 		avatar: "http://localhost:8000/images/chill1.png",
-	// 		moment: 180,
-	// 		user: "username 7",
-	// 		content: "just a comment 7",
-	// 	},
-	// ];
 	const comments = props.comments ?? [];
 
 	const calcLeft = (moment: number) => {
-		const hardCodeDuration = 199;
-		const percent = (moment / hardCodeDuration) * 100;
+		const duration = wavesurfer?.getDuration() ?? 100;
+		const percent = (moment / duration) * 100;
 		return `${percent}%`;
 	};
 
@@ -350,6 +299,7 @@ const WaveTrack = (props: IProps) => {
 												top: "78px",
 												zIndex: 20,
 												left: calcLeft(item.moment),
+												borderRadius: "50%"
 											}}
 										/>
 									</Tooltip>
@@ -385,7 +335,7 @@ const WaveTrack = (props: IProps) => {
 					</div>
 				</div>
 			</div>
-			<CommentTrack comments={comments} track={track} />
+			<CommentTrack comments={comments} track={track!} wavesurfer={wavesurfer} />
 		</div>
 	);
 };

@@ -37,6 +37,7 @@ const Footer = () => {
 						}}
 					>
 						<Container
+						disableGutters
 							sx={{
 								display: "flex",
 								gap: "10px",
@@ -75,10 +76,10 @@ const Footer = () => {
 									minWidth: 100,
 								}}
 							>
-								<Box style={{ color: "white" }}>
+								<Box style={{ color: "white", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
 									{currentTrack.title || ""}
 								</Box>
-								<div style={{ color: "white" }}>
+								<div style={{ color: "white", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
 									{currentTrack.description || ""}
 								</div>
 							</div>

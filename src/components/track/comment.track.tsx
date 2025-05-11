@@ -1,4 +1,4 @@
-import { fetchDefaultImages } from "@/utils/api";
+import { fetchDefaultImages, sendRequest } from "@/utils/api";
 import { useToast } from "@/utils/toast";
 import {
 	Avatar,
@@ -11,13 +11,56 @@ import {
 } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { getSession, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import WaveSurfer from "wavesurfer.js";
 interface IProps {
 	comments: IComment[];
-	track: ITrackTop | null;
+	track: ITrackTop;
+	wavesurfer: WaveSurfer | null;
 }
 const CommentTrack = (props: IProps) => {
+	const {comments, track, wavesurfer} = props;
+	const router = useRouter();
 	const toast = useToast();
 	dayjs.extend(relativeTime);
+	const {data: session} = useSession();
+	const [commentContent, setCommentContent] = useState("");
+
+	const formatTime = (seconds: number) => {
+		const minutes = Math.floor(seconds / 60);
+		const secondsRemainder = Math.round(seconds) % 60;
+		const paddedSeconds = `0${secondsRemainder}`.slice(-2);
+		return `${minutes}:${paddedSeconds}`;
+	};
+
+	const handleJumpTrack = (moment: number) => {
+		if (wavesurfer) {
+			const duration = wavesurfer.getDuration();
+			wavesurfer.seekTo(moment / duration);
+			wavesurfer.play();
+		}
+	}
+
+	const handleSubmit = async () => {
+		const res = await sendRequest<IBackendRes<IComment>>({
+			url: "http://localhost:8000/api/v1/comments",
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${session?.access_token}`
+			},
+			body: {
+				content: commentContent,
+				moment: Math.round(wavesurfer?.getCurrentTime() ?? 0),
+				track: track._id
+			}
+		})
+		if (res.data) {
+			setCommentContent("");
+			router.refresh();
+		}
+	}
 	return (
 		<Grid sx={{ marginTop: "70px" }}>
 			<Box
@@ -29,6 +72,13 @@ const CommentTrack = (props: IProps) => {
 				}}
 			>
 				<TextField
+					value={commentContent}
+					onChange={(e) => setCommentContent(e.target.value)}
+					onKeyDown={(e) => {
+						if (e.key === "Enter") {
+							handleSubmit();
+						}
+					}}
 					variant="standard"
 					label="Comment"
 					sx={{
@@ -46,9 +96,7 @@ const CommentTrack = (props: IProps) => {
 				></TextField>
 				<Button
 					sx={{ color: "rgb(178, 114, 167)" }}
-					onClick={() =>
-						toast.warning("Not handle yet. Use enter pls :)")
-					}
+					onClick={() => handleSubmit()}
 				>
 					Send
 				</Button>
@@ -62,11 +110,12 @@ const CommentTrack = (props: IProps) => {
 						alignItems: "center",
 						padding: 2,
 						width: 150,
+						marginRight: "20px"
 					}}
 					className="left"
 				>
 					<Avatar
-						src="/user/avatar.jpg"
+						src={fetchDefaultImages(session?.user.type || "")}
 						alt="avatar"
 						sx={{ width: 80, height: 80 }}
 					/>
@@ -75,18 +124,18 @@ const CommentTrack = (props: IProps) => {
 						sx={{
 							marginTop: 1,
 							color: "gray",
-							wordBreak: "break-word",
+							// wordBreak: "break-word",
 							textAlign: "center",
 						}}
 					>
-						admin@gmail.com
+						{session?.user.email}
 					</Typography>
 				</Box>
 				<Box
 					sx={{ display: "flex", flexDirection: "column", flex: 1 }}
 					className="right"
 				>
-					{props.comments.map((comment) => (
+					{comments.map((comment) => (
 						<Box
 							key={comment._id}
 							sx={{
@@ -118,7 +167,15 @@ const CommentTrack = (props: IProps) => {
 										maxWidth: "100%",
 									}}
 								>
-									<strong>{comment.user.email}</strong>
+									<strong>{comment.user.email}</strong> at <span 
+										onClick={() => handleJumpTrack(comment.moment)}
+										style={{
+											color: "rgb(100, 19, 77)",
+											cursor: "pointer"
+										}}
+									>
+										{formatTime(comment.moment)}
+									</span>
 									<Box>{comment.content}</Box>
 								</Box>
 								<Box
