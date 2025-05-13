@@ -1,6 +1,6 @@
 "use client";
 import { useHasMounted, useWavesurfer } from "@/utils/customHook";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, {
 	useEffect,
 	useRef,
@@ -31,6 +31,8 @@ const WaveTrack = (props: IProps) => {
 	const hoverRef = useRef<HTMLDivElement>(null);
 	const [time, setTime] = useState<string>("0:00");
 	const [duration, setDuration] = useState<string>("0:00");
+	const isIncrease = useRef(false);
+	const router = useRouter();
 
 	const { currentTrack, setCurrentTrack } = React.useContext(
 		TrackContext
@@ -165,7 +167,18 @@ const WaveTrack = (props: IProps) => {
 		return `${percent}%`;
 	};
 
-
+	const handleFirstPlay = async () => {
+		if (!isIncrease.current) {
+			const res = await sendRequest<IBackendRes<any>>({
+				url: `http://localhost:8000/api/v1/tracks/increase-view`,
+				method: "POST",
+				body: {
+					trackId: track?._id,
+				},
+			});
+			isIncrease.current = true;
+		}
+	};
 	return (
 		<div style={{ marginTop: 20 }}>
 			<div
@@ -180,6 +193,7 @@ const WaveTrack = (props: IProps) => {
 				}}
 				onClick={() => {
 					onPlayClick();
+					handleFirstPlay();
 				}}
 			>
 				<div
@@ -208,11 +222,17 @@ const WaveTrack = (props: IProps) => {
 							>
 								{isPlaying === true ? (
 									<PauseIcon
-										sx={{ fontSize: 30, color: "rgb(233, 223, 255)" }}
+										sx={{
+											fontSize: 30,
+											color: "rgb(233, 223, 255)",
+										}}
 									/>
 								) : (
 									<PlayArrowIcon
-										sx={{ fontSize: 30, color: "rgb(233, 223, 255)" }}
+										sx={{
+											fontSize: 30,
+											color: "rgb(233, 223, 255)",
+										}}
 									/>
 								)}
 							</div>
@@ -303,7 +323,7 @@ const WaveTrack = (props: IProps) => {
 												top: "78px",
 												zIndex: 20,
 												left: calcLeft(item.moment),
-												borderRadius: "50%"
+												borderRadius: "50%",
 											}}
 										/>
 									</Tooltip>
@@ -322,7 +342,12 @@ const WaveTrack = (props: IProps) => {
 					}}
 				>
 					<div
-						style={{ background: "#ccc", width: 250, height: 250, borderRadius: "10px", }}
+						style={{
+							background: "#ccc",
+							width: 250,
+							height: 250,
+							borderRadius: "10px",
+						}}
 					>
 						<Box
 							component="img"
@@ -331,7 +356,7 @@ const WaveTrack = (props: IProps) => {
 							alt="Song image"
 							sx={{
 								width: "100%",
-    							height: "100%",
+								height: "100%",
 								objectFit: "cover",
 								display: "block",
 								borderRadius: "10px",
@@ -340,8 +365,12 @@ const WaveTrack = (props: IProps) => {
 					</div>
 				</div>
 			</div>
-			<LikeTrack track={track!}/>
-			<CommentTrack comments={comments} track={track!} wavesurfer={wavesurfer} />
+			<LikeTrack track={track!} />
+			<CommentTrack
+				comments={comments}
+				track={track!}
+				wavesurfer={wavesurfer}
+			/>
 		</div>
 	);
 };
