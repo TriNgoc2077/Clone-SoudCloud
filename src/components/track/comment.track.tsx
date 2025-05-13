@@ -1,4 +1,5 @@
 import { fetchDefaultImages, sendRequest } from "@/utils/api";
+import { useHasMounted } from "@/utils/customHook";
 import { useToast } from "@/utils/toast";
 import {
 	Avatar,
@@ -23,6 +24,7 @@ interface IProps {
 const CommentTrack = (props: IProps) => {
 	const {comments, track, wavesurfer} = props;
 	const router = useRouter();
+	const hasMounted = useHasMounted();
 	const toast = useToast();
 	dayjs.extend(relativeTime);
 	const {data: session} = useSession();
@@ -185,7 +187,7 @@ const CommentTrack = (props: IProps) => {
 										marginTop: 0.5,
 									}}
 								>
-									{dayjs(comment.createdAt).fromNow()}
+									{hasMounted && dayjs(comment.createdAt).fromNow()}
 								</Box>
 							</Box>
 						</Box>

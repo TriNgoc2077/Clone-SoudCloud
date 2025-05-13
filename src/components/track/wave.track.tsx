@@ -1,5 +1,5 @@
 "use client";
-import { useWavesurfer } from "@/utils/customHook";
+import { useHasMounted, useWavesurfer } from "@/utils/customHook";
 import { useSearchParams } from "next/navigation";
 import React, {
 	useEffect,
@@ -13,15 +13,17 @@ import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 import "./wave.scss";
-import { Box, Tooltip } from "@mui/material";
+import { Box, Chip, Tooltip } from "@mui/material";
 import { TrackContext } from "@/lib/track.wrapper";
-import { fetchDefaultImages } from "@/utils/api";
+import { fetchDefaultImages, sendRequest } from "@/utils/api";
 import CommentTrack from "./comment.track";
+import LikeTrack from "./like.track";
 
 interface IProps {
 	track: ITrackTop | null;
 	comments: IComment[] | null;
 }
+
 const WaveTrack = (props: IProps) => {
 	const { track } = props;
 	const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -162,6 +164,7 @@ const WaveTrack = (props: IProps) => {
 		const percent = (moment / duration) * 100;
 		return `${percent}%`;
 	};
+
 
 	return (
 		<div style={{ marginTop: 20 }}>
@@ -337,6 +340,7 @@ const WaveTrack = (props: IProps) => {
 					</div>
 				</div>
 			</div>
+			<LikeTrack track={track!}/>
 			<CommentTrack comments={comments} track={track!} wavesurfer={wavesurfer} />
 		</div>
 	);
