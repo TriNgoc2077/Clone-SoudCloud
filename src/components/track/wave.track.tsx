@@ -168,6 +168,7 @@ const WaveTrack = (props: IProps) => {
 			<div
 				style={{
 					display: "flex",
+					borderRadius: "10px",
 					gap: 15,
 					padding: 20,
 					height: 400,
@@ -204,11 +205,11 @@ const WaveTrack = (props: IProps) => {
 							>
 								{isPlaying === true ? (
 									<PauseIcon
-										sx={{ fontSize: 30, color: "white" }}
+										sx={{ fontSize: 30, color: "rgb(233, 223, 255)" }}
 									/>
 								) : (
 									<PlayArrowIcon
-										sx={{ fontSize: 30, color: "white" }}
+										sx={{ fontSize: 30, color: "rgb(233, 223, 255)" }}
 									/>
 								)}
 							</div>
@@ -217,10 +218,10 @@ const WaveTrack = (props: IProps) => {
 							<div
 								style={{
 									padding: "0 5px",
-									background: "#333",
+									// background: "#333",
 									fontSize: 30,
 									width: "fit-content",
-									color: "white",
+									color: "rgb(233, 223, 255)",
 								}}
 							>
 								{track?.title || "Song Name"}
@@ -229,10 +230,10 @@ const WaveTrack = (props: IProps) => {
 								style={{
 									padding: "0 5px",
 									marginTop: 10,
-									background: "#333",
+									// background: "#333",
 									fontSize: 20,
 									width: "fit-content",
-									color: "white",
+									color: "rgb(233, 223, 255)",
 								}}
 							>
 								{track?.description || "Singer"}
@@ -318,7 +319,7 @@ const WaveTrack = (props: IProps) => {
 					}}
 				>
 					<div
-						style={{ background: "#ccc", width: 250, height: 250 }}
+						style={{ background: "#ccc", width: 250, height: 250, borderRadius: "10px", }}
 					>
 						<Box
 							component="img"
@@ -327,9 +328,10 @@ const WaveTrack = (props: IProps) => {
 							alt="Song image"
 							sx={{
 								width: "100%",
-								maxWidth: 250,
-								height: "auto",
-								background: "0$",
+    							height: "100%",
+								objectFit: "cover",
+								display: "block",
+								borderRadius: "10px",
 							}}
 						/>
 					</div>
