@@ -6,7 +6,8 @@ import type { Metadata, ResolvingMetadata } from 'next'
 type Props = {
   params:{ slug: string }
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}
+}  
+
  
 export async function generateMetadata(
   { params, searchParams }: Props,
