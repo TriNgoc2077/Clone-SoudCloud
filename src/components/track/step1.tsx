@@ -1,11 +1,8 @@
 "use client";
 import { FileWithPath, useDropzone } from "react-dropzone";
 import "./theme.css";
-import { styled } from "@mui/material/styles";
-import Button from "@mui/material/Button";
 import { useCallback, useState } from "react";
 import { ButtonFileAudioUpload } from "./button.upload";
-import { sendRequestFile } from "@/utils/api";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 interface IProps {

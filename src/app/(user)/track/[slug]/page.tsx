@@ -1,7 +1,30 @@
 import WaveTrack from "@/components/track/wave.track";
 import { sendRequest } from "@/utils/api";
 import Container from "@mui/material/Container";
-
+import type { Metadata, ResolvingMetadata } from 'next'
+ 
+type Props = {
+  params:{ slug: string }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+ 
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> { 
+  // fetch post information
+  	const res = await sendRequest<IBackendRes<ITrackTop>>({
+		url: `http://localhost:8000/api/v1/tracks/${params.slug}`,
+		method: "GET",
+		nextOption: { cache: "no-store" }
+	});
+ 
+  return {
+    title: res.data?.title,
+    description: res.data?.description,
+  }
+}
+ 
 const DetailTrackPage = async (props: any) => {
 	const { params } = props;
 	//params: props.params, attribute nextjs provided

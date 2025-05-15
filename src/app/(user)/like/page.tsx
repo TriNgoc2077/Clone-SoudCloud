@@ -1,8 +1,11 @@
-"use client";
-import { useState } from "react";
+import type { Metadata } from 'next';
+ 
+export const metadata: Metadata = {
+  title: "Like page",
+  description: "Your tracks"
+}
 
 const LikePage = () => {
-  const [name, setName] = useState("Cao Tri Ngoc");
-  return (<>Like page {name}</>);
+  return (<>Like page</>);
 }
 export default LikePage;
