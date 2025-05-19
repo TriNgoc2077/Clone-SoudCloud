@@ -57,6 +57,7 @@ const DetailTrackPage = async (props: any) => {
 			sort: "-createdAt",
 		},
 	});
+
 	return (
 		<Container>
 			<div>
