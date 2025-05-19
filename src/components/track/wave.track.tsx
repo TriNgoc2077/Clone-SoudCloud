@@ -18,6 +18,7 @@ import { TrackContext } from "@/lib/track.wrapper";
 import { fetchDefaultImages, sendRequest } from "@/utils/api";
 import CommentTrack from "./comment.track";
 import LikeTrack from "./like.track";
+import Image from "next/image";
 
 interface IProps {
 	track: ITrackTop | null;
@@ -305,7 +306,7 @@ const WaveTrack = (props: IProps) => {
 											},
 										}}
 									>
-										<img
+										<Image
 											onPointerMove={(e) => {
 												const hover = hoverRef.current!;
 												hover.style.width = calcLeft(
@@ -317,14 +318,14 @@ const WaveTrack = (props: IProps) => {
 											)}
 											alt=""
 											style={{
-												height: 20,
-												width: 20,
 												position: "absolute",
 												top: "78px",
 												zIndex: 20,
 												left: calcLeft(item.moment),
 												borderRadius: "50%",
 											}}
+											height={20}
+											width={20}
 										/>
 									</Tooltip>
 								);

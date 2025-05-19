@@ -7,6 +7,8 @@ import { Box, Button, Divider } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import Link from "next/link";
 import { convertSlugUrl } from "@/utils/api";
+import Image from "next/image";
+
 interface IProps {
 	title: string;
 	data: ITrackTop[];
@@ -58,6 +60,35 @@ const MainSlider = (props: IProps) => {
 		slidesToScroll: 1,
 		nextArrow: <NextArrow />,
 		prevArrow: <PrevArrow />,
+		responsive: [
+			{
+				breakpoint: 1024,
+				settings: {
+					slidesToShow: 3,
+					slidesToScroll: 1,
+					infinite: true,
+					dots: true,
+				},
+			},
+			{
+				breakpoint: 600,
+				settings: {
+					slidesToShow: 2,
+					slidesToScroll: 1,
+					infinite: true,
+					dots: true,
+				},
+			},
+			{
+				breakpoint: 480,
+				settings: {
+					slidesToShow: 1,
+					slidesToScroll: 1,
+					infinite: true,
+					dots: true,
+				},
+			},
+		],
 	};
 	return (
 		<Box
@@ -83,10 +114,26 @@ const MainSlider = (props: IProps) => {
 							}.html?audio=${item.trackUrl}`}
 						>
 							<div className="track" key={item._id}>
-								<img
+								{/* <img
 									src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${item.imgUrl}`}
 									alt={item.title}
-								/>
+								/> */}
+								<div
+									style={{
+										position: "relative",
+										height: "200px",
+										width: "100%",
+									}}
+								>
+									<Image
+										src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${item.imgUrl}`}
+										alt={item.title}
+										fill
+										style={{
+											objectFit: "contain",
+										}}
+									/>
+								</div>
 								<h4>{item.title}</h4>
 								<h5>{item.description}</h5>
 							</div>

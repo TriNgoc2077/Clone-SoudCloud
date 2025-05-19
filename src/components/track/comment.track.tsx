@@ -13,6 +13,7 @@ import {
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { getSession, useSession } from "next-auth/react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import WaveSurfer from "wavesurfer.js";
@@ -22,12 +23,12 @@ interface IProps {
 	wavesurfer: WaveSurfer | null;
 }
 const CommentTrack = (props: IProps) => {
-	const {comments, track, wavesurfer} = props;
+	const { comments, track, wavesurfer } = props;
 	const router = useRouter();
 	const hasMounted = useHasMounted();
 	const toast = useToast();
 	dayjs.extend(relativeTime);
-	const {data: session} = useSession();
+	const { data: session } = useSession();
 	const [commentContent, setCommentContent] = useState("");
 
 	const formatTime = (seconds: number) => {
@@ -43,26 +44,26 @@ const CommentTrack = (props: IProps) => {
 			wavesurfer.seekTo(moment / duration);
 			wavesurfer.play();
 		}
-	}
+	};
 
 	const handleSubmit = async () => {
 		const res = await sendRequest<IBackendRes<IComment>>({
 			url: "http://localhost:8000/api/v1/comments",
 			method: "POST",
 			headers: {
-				Authorization: `Bearer ${session?.access_token}`
+				Authorization: `Bearer ${session?.access_token}`,
 			},
 			body: {
 				content: commentContent,
 				moment: Math.round(wavesurfer?.getCurrentTime() ?? 0),
-				track: track._id
-			}
-		})
+				track: track._id,
+			},
+		});
 		if (res.data) {
 			setCommentContent("");
 			router.refresh();
 		}
-	}
+	};
 	return (
 		<Grid sx={{ marginTop: "70px" }}>
 			<Box
@@ -112,7 +113,7 @@ const CommentTrack = (props: IProps) => {
 						alignItems: "center",
 						padding: 2,
 						width: 150,
-						marginRight: "20px"
+						marginRight: "20px",
 					}}
 					className="left"
 				>
@@ -148,15 +149,15 @@ const CommentTrack = (props: IProps) => {
 							}}
 						>
 							<Box>
-								<img
+								<Image
 									src={fetchDefaultImages(comment.user.type)}
 									alt="avatar"
 									style={{
-										width: 40,
-										height: 40,
 										borderRadius: "50%",
 										objectFit: "cover",
 									}}
+									width={40}
+									height={40}
 								/>
 							</Box>
 
@@ -169,11 +170,14 @@ const CommentTrack = (props: IProps) => {
 										maxWidth: "100%",
 									}}
 								>
-									<strong>{comment.user.email}</strong> at <span 
-										onClick={() => handleJumpTrack(comment.moment)}
+									<strong>{comment.user.email}</strong> at{" "}
+									<span
+										onClick={() =>
+											handleJumpTrack(comment.moment)
+										}
 										style={{
 											color: "rgb(100, 19, 77)",
-											cursor: "pointer"
+											cursor: "pointer",
 										}}
 									>
 										{formatTime(comment.moment)}
@@ -187,7 +191,8 @@ const CommentTrack = (props: IProps) => {
 										marginTop: 0.5,
 									}}
 								>
-									{hasMounted && dayjs(comment.createdAt).fromNow()}
+									{hasMounted &&
+										dayjs(comment.createdAt).fromNow()}
 								</Box>
 							</Box>
 						</Box>
