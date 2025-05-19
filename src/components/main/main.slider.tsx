@@ -6,6 +6,7 @@ import { Settings } from "react-slick";
 import { Box, Button, Divider } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import Link from "next/link";
+import { convertSlugUrl } from "@/utils/api";
 interface IProps {
 	title: string;
 	data: ITrackTop[];
@@ -77,7 +78,9 @@ const MainSlider = (props: IProps) => {
 				{props.data.map((item) => {
 					return (
 						<Link
-							href={`/track/${item._id}?audio=${item.trackUrl}&id=${item._id}`}
+							href={`/track/${convertSlugUrl(item.title)}-${
+								item._id
+							}.html?audio=${item.trackUrl}`}
 						>
 							<div className="track" key={item._id}>
 								<img

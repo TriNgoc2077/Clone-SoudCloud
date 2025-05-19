@@ -12,6 +12,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import { TrackContext } from "@/lib/track.wrapper";
+import { convertSlugUrl } from "@/utils/api";
 interface IProps {
 	data: ITrackTop;
 }
@@ -37,7 +38,9 @@ const ProfileTrack = (props: IProps) => {
 					<Typography
 						component="a"
 						variant="h5"
-						href={`/track/${data._id}?audio=${data.trackUrl}&id=${data._id}`}
+						href={`/track/${convertSlugUrl(data.title)}-${
+							data._id
+						}.html?audio=${data.trackUrl}`}
 						style={{
 							textDecoration: "none",
 							color: "rgb(52, 52, 52)",
