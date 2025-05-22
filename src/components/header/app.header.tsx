@@ -274,7 +274,7 @@ export default function AppHeader() {
 								</>
 							) : (
 								<>
-									<Link href="auth/signin">Login</Link>
+									<Link href="auth/signIn">Login</Link>
 								</>
 							)}
 						</Box>

@@ -8,7 +8,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions: AuthOptions = {
 	// Configure one or more authentication providers
-	secret: process.env.NO_SECRET,
+	secret: process.env.NEXTAUTH_SECRET,
 	providers: [
 		// ...add more providers here
 		CredentialsProvider({
@@ -95,7 +95,7 @@ export const authOptions: AuthOptions = {
 		},
 	},
 	// pages: {
-	// 	signIn: "auth/signin",
+	// 	signIn: "auth/signIn",
 	// },
 };
 const handler = NextAuth(authOptions);
