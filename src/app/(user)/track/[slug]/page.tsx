@@ -17,7 +17,7 @@ export async function generateMetadata(
 	const id = temp1[temp1.length - 1];
 	// fetch post information
 	const res = await sendRequest<IBackendRes<ITrackTop>>({
-		url: `http://localhost:8000/api/v1/tracks/${id}`,
+		url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/${id}`,
 		method: "GET",
 		nextOption: { cache: "no-store" },
 	});
@@ -42,13 +42,13 @@ const DetailTrackPage = async (props: any) => {
 	console.log(id);
 	//params: props.params, attribute nextjs provided
 	const res = await sendRequest<IBackendRes<ITrackTop>>({
-		url: `http://localhost:8000/api/v1/tracks/${id}`,
+		url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/${id}`,
 		method: "GET",
 		nextOption: { cache: "no-store" },
 	});
 
 	const resComments = await sendRequest<IBackendRes<any>>({
-		url: `http://localhost:8000/api/v1/tracks/comments`,
+		url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/comments`,
 		method: "POST",
 		queryParams: {
 			trackId: id,

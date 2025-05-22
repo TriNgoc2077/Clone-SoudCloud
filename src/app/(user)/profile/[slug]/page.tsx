@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 }
 const ProfilePage = async ({ params }: { params: { slug: string } }) => {
 	const res = await sendRequest<IBackendRes<IModelPaginate<ITrackTop>>>({
-		url: "http://localhost:8000/api/v1/tracks/users?pageSize=5000&current=1",
+		url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/users?pageSize=5000&current=1`,
 		method: "POST",
 		body: { id: params.slug },
 	});

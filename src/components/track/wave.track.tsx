@@ -171,7 +171,7 @@ const WaveTrack = (props: IProps) => {
 	const handleFirstPlay = async () => {
 		if (!isIncrease.current) {
 			const res = await sendRequest<IBackendRes<any>>({
-				url: `http://localhost:8000/api/v1/tracks/increase-view`,
+				url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/increase-view`,
 				method: "POST",
 				body: {
 					trackId: track?._id,
