@@ -1,3 +1,4 @@
+"use client";
 import { Box, Button, Container, Typography, useTheme } from "@mui/material";
 import Link from "next/link";
 import { Home as HomeIcon } from "@mui/icons-material";

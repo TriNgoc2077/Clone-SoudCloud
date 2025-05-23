@@ -5,11 +5,18 @@ import type { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
 	params: { slug: string };
-	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
+export async function generateStaticParams() {
+	return [
+		{ slug: "le-luu-ly-68092eeb7e5e033f9976b4ff.html" },
+		{ slug: "tinh-co-yeu-em-68092eeb7e5e033f9976b502.html" },
+		{ slug: "song-cho-het-doi-thanh-xuan-68092eeb7e5e033f9976b503.html" },
+	]
+}
+
 export async function generateMetadata(
-	{ params, searchParams }: Props,
+	{ params }: Props,
 	parent: ResolvingMetadata
 ): Promise<Metadata> {
 	const temp = params.slug.split(".html") ?? [];
@@ -19,7 +26,7 @@ export async function generateMetadata(
 	const res = await sendRequest<IBackendRes<ITrackTop>>({
 		url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/${id}`,
 		method: "GET",
-		nextOption: { cache: "no-store" },
+		// nextOption: { cache: "no-store" },
 	});
 
 	return {
@@ -44,7 +51,7 @@ const DetailTrackPage = async (props: any) => {
 	const res = await sendRequest<IBackendRes<ITrackTop>>({
 		url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/${id}`,
 		method: "GET",
-		nextOption: { cache: "no-store" },
+		// nextOption: { cache: "no-store" },
 	});
 
 	const resComments = await sendRequest<IBackendRes<any>>({
