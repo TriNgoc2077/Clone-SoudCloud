@@ -46,12 +46,14 @@ const DetailTrackPage = async (props: any) => {
 	const temp = params.slug.split(".html") ?? [];
 	const temp1 = (temp[0].split("-") ?? []) as string[];
 	const id = temp1[temp1.length - 1];
-	console.log(id);
 	//params: props.params, attribute nextjs provided
 	const res = await sendRequest<IBackendRes<ITrackTop>>({
 		url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/${id}`,
 		method: "GET",
-		// nextOption: { cache: "no-store" },
+		nextOption: { 
+			// cache: "no-store"
+			next: { tags: ['track-by-id'] }
+		},
 	});
 
 	const resComments = await sendRequest<IBackendRes<any>>({
@@ -64,7 +66,7 @@ const DetailTrackPage = async (props: any) => {
 			sort: "-createdAt",
 		},
 	});
-	await new Promise(resolve => setTimeout(resolve, 3000))
+	// await new Promise(resolve => setTimeout(resolve, 3000))
 
 	return (
 		<Container>

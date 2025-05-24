@@ -12,6 +12,9 @@ const ProfilePage = async ({ params }: { params: { slug: string } }) => {
 		url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/users?pageSize=5000&current=1`,
 		method: "POST",
 		body: { id: params.slug },
+		nextOption: {
+			next: { tags: ['track-by-profile'] }
+		}
 	});
 	const tracks = res.data?.result ?? [];
 	return (

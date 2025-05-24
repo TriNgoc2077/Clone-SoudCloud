@@ -49,6 +49,15 @@ const LikeTrack = (props: any) => {
             }
         })
         fetchData();
+
+        await sendRequest<IBackendRes<any>>({
+            url: `/api/revalidate`,
+            method: "POST",
+            queryParams: {
+                tag: "track-by-id",
+                secret: "justARandomString"
+            }
+        });
         router.refresh();
 	}
     return (
