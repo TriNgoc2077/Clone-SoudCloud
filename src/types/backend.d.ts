@@ -89,4 +89,15 @@ declare global {
         createdAt: string;
         updatedAt: string;
     }
+
+    interface IPlaylist {
+        title: string,
+        isPublic: true,
+        user: string,
+        tracks: any[],
+        isDeleted: boolean,
+        _id: string,
+        createdAt: string,
+        updatedAt: string,
+    }
 }
