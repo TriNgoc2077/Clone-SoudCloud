@@ -14,7 +14,6 @@ export default function Loading() {
         // background: 'linear-gradient(to bottom, #f8f9fa, #ffffff)',
       }}
     >
-      {/* Animated heart icon with pulse effect */}
       <Box
         sx={{
           position: 'relative',
@@ -45,7 +44,6 @@ export default function Loading() {
         />
       </Box>
 
-      {/* Loading text with gradient */}
       <Typography
         variant="h5"
         component="div"
@@ -60,7 +58,6 @@ export default function Loading() {
         Loading your favorite tracks...
       </Typography>
 
-      {/* Subtle progress indicator */}
       <CircularProgress
         size={50}
         thickness={4}
