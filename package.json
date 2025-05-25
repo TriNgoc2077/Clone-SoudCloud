@@ -40,6 +40,11 @@
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "@types/react-slick": "^0.23.13",
+    "eslint": "^9.27.0",
+    "eslint-config-next": "15.4.0-canary.51",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.0",
+    "prettier": "^3.5.3",
     "typescript": "5.2.2"
   }
 }
