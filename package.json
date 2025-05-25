@@ -31,6 +31,7 @@
     "react-dropzone": "14.2.3",
     "react-h5-audio-player": "3.8.6",
     "react-slick": "0.29.0",
+    "sharp": "^0.34.2",
     "slick-carousel": "1.8.1",
     "slugify": "^1.6.6",
     "wavesurfer.js": "7.3.1"

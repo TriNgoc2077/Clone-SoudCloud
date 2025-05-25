@@ -348,6 +348,9 @@ const AuthSignIn = () => {
 											fontSize={
 												isMobile ? "medium" : "large"
 											}
+											onClick={() => {
+												signIn("google");
+											}}
 										/>
 									),
 									color: "#DB4437",
