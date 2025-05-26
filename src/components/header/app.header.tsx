@@ -126,7 +126,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const LogoBox = styled(Box)(({ theme }) => ({
+const LogoBox = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
@@ -384,7 +385,7 @@ export default function AppHeader() {
             <Toolbar sx={{ py: 1 }}>
               {/* Logo Section */}
               <Fade in timeout={800}>
-                <LogoBox onClick={handleRedirectHome}>
+                <LogoBox href={'/'}>
                   <AudiotrackIcon sx={{ fontSize: 28, color: '#ffffff' }} />
                   <Typography
                     variant="h5"

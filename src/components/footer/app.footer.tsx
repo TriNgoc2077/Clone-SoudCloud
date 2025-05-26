@@ -19,7 +19,6 @@ import "./style.css";
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { TrackContext } from "@/lib/track.wrapper";
 import { pink, purple } from "@mui/material/colors";
-// Removed unused imports since we're using the original AudioPlayer
 
 // Enhanced Styled Components
 const GlassFooter = styled(AppBar)(({ theme }) => ({
@@ -99,141 +98,61 @@ const EnhancedTrackAvatar = styled(Avatar)(({ theme }) => ({
   },
 }));
 
-const ControlsSection = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  flex: 1,
-  gap: theme.spacing(1),
-}));
-
-const MainControls = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(1),
-}));
-
-const PlayButton = styled(IconButton)(({ theme }) => ({
-  width: 48,
-  height: 48,
-  background: `linear-gradient(135deg, ${alpha('#ffffff', 0.25)} 0%, ${alpha('#ffffff', 0.15)} 100%)`,
-  backdropFilter: 'blur(10px)',
-  border: `1px solid ${alpha('#ffffff', 0.3)}`,
-  color: '#ffffff',
-  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-  '&:hover': {
-    background: `linear-gradient(135deg, ${alpha('#ffffff', 0.35)} 0%, ${alpha('#ffffff', 0.25)} 100%)`,
-    transform: 'scale(1.1)',
-    boxShadow: `0 8px 24px ${alpha('#ffffff', 0.3)}`,
-  },
-  '&:active': {
-    transform: 'scale(0.95)',
-  },
-}));
-
-const ControlButton = styled(IconButton)(({ theme }) => ({
-  color: alpha('#ffffff', 0.8),
-  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-  '&:hover': {
-    color: '#ffffff',
-    background: alpha('#ffffff', 0.15),
-    transform: 'scale(1.1)',
-  },
-  '&.active': {
-    color: '#ffffff',
-    background: alpha('#ffffff', 0.2),
-  },
-}));
-
-const ProgressSection = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(2),
-  width: '100%',
-  maxWidth: 500,
-  [theme.breakpoints.down('sm')]: {
-    gap: theme.spacing(1),
-  },
-}));
-
-const StyledSlider = styled(Slider)(({ theme }) => ({
-  color: '#ffffff',
-  height: 6,
-  '& .MuiSlider-track': {
-    background: `linear-gradient(90deg, #ffffff 0%, ${alpha('#ffffff', 0.8)} 100%)`,
-    border: 'none',
-    borderRadius: 3,
-  },
-  '& .MuiSlider-rail': {
-    backgroundColor: alpha('#ffffff', 0.3),
-    borderRadius: 3,
-  },
-  '& .MuiSlider-thumb': {
-    height: 16,
-    width: 16,
-    backgroundColor: '#ffffff',
-    border: `2px solid ${alpha('#ffffff', 0.8)}`,
-    boxShadow: `0 4px 12px ${alpha('#000000', 0.3)}`,
-    '&:hover': {
-      boxShadow: `0 0 0 8px ${alpha('#ffffff', 0.16)}`,
-    },
-    '&.Mui-focusVisible': {
-      boxShadow: `0 0 0 8px ${alpha('#ffffff', 0.16)}`,
-    },
-  },
-}));
-
-const VolumeSection = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(1),
-  minWidth: 160,
-  [theme.breakpoints.down('md')]: {
-    minWidth: 120,
-  },
-  [theme.breakpoints.down('sm')]: {
-    display: 'none',
-  },
-}));
-
-const TimeDisplay = styled(Typography)(({ theme }) => ({
-  color: alpha('#ffffff', 0.9),
-  fontSize: '0.75rem',
-  fontWeight: 500,
-  minWidth: 40,
-  textAlign: 'center',
-  fontFamily: 'monospace',
-}));
-
 const Footer = () => {
-	const { currentTrack, setCurrentTrack, currentTime, setCurrentTime } = useContext(
-        TrackContext
-    ) as ITrackContext;
-    const playerRef = useRef(null);
-    const hasMounted = useHasMounted();
+  const { currentTrack, setCurrentTrack, currentTime, setCurrentTime } = useContext(
+    TrackContext
+  ) as ITrackContext;
+  const playerRef = useRef<any>(null);
+  const hasMounted = useHasMounted();
+  const [isPlayerReady, setIsPlayerReady] = useState(false);
 
-    //sync with wavesurfer
-    useEffect(() => {
-      //@ts-ignore
-      const audio = playerRef?.current?.audio.current;
-      if (!audio) return;
-      if (currentTrack.isPlaying) {
-          audio.play();
-        } else {
-          audio.pause();
-        }
-    }, [currentTrack]);
+  // Sync with wavesurfer
+  useEffect(() => {
+    if (!isPlayerReady) return;
     
-    //sync jump with wavesurfer
-    useEffect(() => {
-      console.log(currentTime);
-      //@ts-ignore
-      const audio = playerRef?.current?.audio.current;
-      if (!audio) return;
-      if (Math.abs(audio.currentTime - currentTime) > 1) {
-        audio.currentTime = currentTime;
-      }
-    }, [currentTime]);
+    const audio = playerRef?.current?.audio?.current;
+    if (!audio) return;
+    
+    if (currentTrack.isPlaying) {
+      audio.play().catch(() => {
+        // Handle play error silently
+      });
+    } else {
+      audio.pause();
+    }
+  }, [currentTrack, isPlayerReady]);
+    
+  // Sync jump with wavesurfer
+  useEffect(() => {
+    if (!isPlayerReady) return;
+    
+    const audio = playerRef?.current?.audio?.current;
+    if (!audio) return;
+    
+    if (Math.abs(audio.currentTime - currentTime) > 1) {
+      audio.currentTime = currentTime;
+    }
+  }, [currentTime, isPlayerReady]);
+
+  // Handle player ready state
+  const handleLoadedData = () => {
+    setIsPlayerReady(true);
+  };
+
+  const handleVolumeChange = (e: any) => {
+    const audio = playerRef?.current?.audio?.current;
+    if (!audio) return;
+    
+    // Ensure volume is a valid number between 0 and 1
+    const volumeValue = parseFloat(e.target.volume);
+    if (!isNaN(volumeValue) && isFinite(volumeValue)) {
+      audio.volume = Math.max(0, Math.min(1, volumeValue));
+    }
+  };
+
+  if (!hasMounted) {
+    return null;
+  }
 
   return (
     <>
@@ -246,7 +165,7 @@ const Footer = () => {
                 <Fade in timeout={800}>
                   <TrackInfoSection>
                     <EnhancedTrackAvatar
-                      src={currentTrack.imgUrl || "/default-album.jpg"}
+                      src={`${process.env.NEXT_PUBLIC_BACKEND_URL_IMAGES}/${currentTrack.imgUrl}` || "/default-album.jpg"}
                       variant="rounded"
                     />
                     <Box sx={{ flex: 1, overflow: 'hidden' }}>
@@ -289,7 +208,7 @@ const Footer = () => {
                       '& .rhap_container': {
                         backgroundColor: 'transparent !important',
                         boxShadow: 'none !important',
-                        padding: 0,
+                        padding: '0 !important',
                       },
                       '& .rhap_main': {
                         gap: '20px !important',
@@ -321,10 +240,15 @@ const Footer = () => {
                           transform: 'scale(1.1) !important',
                         },
                       },
+                      '& .rhap_progress-section': {
+                        flex: '1 1 auto !important',
+                        minWidth: '200px !important',
+                      },
                       '& .rhap_progress-bar': {
                         background: `${alpha('#ffffff', 0.3)} !important`,
                         borderRadius: '3px !important',
                         height: '6px !important',
+                        cursor: 'pointer !important',
                       },
                       '& .rhap_progress-filled': {
                         background: 'linear-gradient(90deg, #ffffff 0%, rgba(255,255,255,0.8) 100%) !important',
@@ -337,21 +261,43 @@ const Footer = () => {
                         border: `2px solid ${alpha('#ffffff', 0.8)} !important`,
                         boxShadow: `0 4px 12px ${alpha('#000000', 0.3)} !important`,
                         top: '-5px !important',
+                        cursor: 'pointer !important',
                       },
                       '& .rhap_time': {
                         color: `${alpha('#ffffff', 0.9)} !important`,
                         fontSize: '0.75rem !important',
                         fontWeight: '500 !important',
                         fontFamily: 'monospace !important',
+                        minWidth: '40px !important',
+                      },
+                      '& .rhap_volume-section': {
+                        flex: '0 0 auto !important',
+                        minWidth: '100px !important',
+                        display: 'flex !important',
+                        alignItems: 'center !important',
+                      },
+                      '& .rhap_volume-bar-area': {
+                        width: '80px !important',
+                        height: '20px !important',
+                        display: 'flex !important',
+                        alignItems: 'center !important',
+                        cursor: 'pointer !important',
                       },
                       '& .rhap_volume-bar': {
                         background: `${alpha('#ffffff', 0.3)} !important`,
                         borderRadius: '3px !important',
                         height: '6px !important',
+                        width: '100% !important',
+                        position: 'relative !important',
+                        cursor: 'pointer !important',
                       },
                       '& .rhap_volume-filled': {
                         background: 'linear-gradient(90deg, #ffffff 0%, rgba(255,255,255,0.8) 100%) !important',
                         borderRadius: '3px !important',
+                        height: '100% !important',
+                        position: 'absolute !important',
+                        left: '0 !important',
+                        top: '0 !important',
                       },
                       '& .rhap_volume-indicator': {
                         background: '#ffffff !important',
@@ -359,7 +305,18 @@ const Footer = () => {
                         height: '16px !important',
                         border: `2px solid ${alpha('#ffffff', 0.8)} !important`,
                         boxShadow: `0 4px 12px ${alpha('#000000', 0.3)} !important`,
-                        top: '-5px !important',
+                        borderRadius: '50% !important',
+                        position: 'absolute !important',
+                        top: '50% !important',
+                        transform: 'translateY(-50%) !important',
+                        cursor: 'pointer !important',
+                      },
+                      '& .rhap_volume-button': {
+                        color: `${alpha('#ffffff', 0.8)} !important`,
+                        marginRight: '8px !important',
+                        '&:hover': {
+                          color: '#ffffff !important',
+                        },
                       },
                     }}
                   >
@@ -367,6 +324,7 @@ const Footer = () => {
                       ref={playerRef}
                       layout="horizontal-reverse"
                       src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/tracks/${currentTrack.trackUrl}`}
+                      onLoadedData={handleLoadedData}
                       onSeeking={(e: any) => {
                         setCurrentTime(e.target.currentTime);
                       }}
@@ -382,6 +340,8 @@ const Footer = () => {
                           isPlaying: false,
                         });
                       }}
+                      onVolumeChange={handleVolumeChange}
+                      volume={0.7} // Set default volume
                       style={{
                         backgroundColor: "transparent",
                         boxShadow: "unset",

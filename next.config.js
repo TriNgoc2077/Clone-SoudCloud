@@ -8,21 +8,24 @@ const nextConfig = {
 			transform: "@mui/icons-material/{{member}}",
 		},
 	},
+	// images: {
+	// 	remotePatterns: [
+	// 		{
+	// 			protocol: "https",
+	// 			hostname: "backend-soundcloud.onrender.com",
+	// 			port: "8000",
+	// 			pathname: "/images/**",
+	// 		},
+	// 		// {
+	// 		// 	protocol: "http",
+	// 		// 	hostname: "host.docker.internal",
+	// 		// 	port: "8001",
+	// 		// 	pathname: "/images/**",
+	// 		// },
+	// 	],
+	// },
 	images: {
-		remotePatterns: [
-			{
-				protocol: "http",
-				hostname: "localhost",
-				port: "8000",
-				pathname: "/images/**",
-			},
-			// {
-			// 	protocol: "http",
-			// 	hostname: "host.docker.internal",
-			// 	port: "8001",
-			// 	pathname: "/images/**",
-			// },
-		],
+		domains: ['backend-soundcloud.onrender.com'],
 	},
 };
 

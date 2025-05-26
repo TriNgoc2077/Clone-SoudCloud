@@ -107,6 +107,9 @@ const WaveTrack = (props: IProps) => {
 	const wavesurfer = useWavesurfer(containerRef, optionsMemo);
 
 	useEffect(() => {
+		if (track?._id && currentTrack._id && track._id !== currentTrack._id) {
+			return;
+		}
 		if (track?._id && !currentTrack._id) {
 			setCurrentTrack({ ...track, isPlaying: false });
 		}
@@ -171,6 +174,9 @@ const WaveTrack = (props: IProps) => {
 					...prev,
 					isPlaying: true,
 				}));
+				if (track?._id && currentTrack._id && track?._id !== currentTrack._id) {
+					setCurrentTrack({ ...track, isPlaying: true });
+				}
 			}),
 			wavesurfer.on("pause", () => {
 				setIsPlaying(false);
@@ -194,6 +200,9 @@ const WaveTrack = (props: IProps) => {
 	}, [wavesurfer]);
 
 	useEffect(() => {
+		if (wavesurfer && currentTrack._id && currentTrack._id !== track?._id) {
+			return;
+		}
 		if (wavesurfer) {
 			if (Math.abs(wavesurfer.getCurrentTime() - currentTime) > 0.1) {
 				wavesurfer.seekTo(currentTime / wavesurfer.getDuration());
@@ -203,6 +212,9 @@ const WaveTrack = (props: IProps) => {
 	}, [currentTime]);
 
 	useEffect(() => {
+		if (wavesurfer && currentTrack._id && currentTrack._id !== track?._id) {
+			return;
+		}
 		if (currentTrack.isPlaying && wavesurfer) {
 			wavesurfer.play();
 		} 
@@ -356,6 +368,14 @@ const WaveTrack = (props: IProps) => {
 												hover.style.width = calcLeft(
 													item.moment
 												);
+											}}
+											onClick={(e) => {
+												if (wavesurfer) {
+													const duration = wavesurfer.getDuration();
+													wavesurfer.seekTo(item.moment / duration);
+													wavesurfer.play();
+												}
+
 											}}
 											src={fetchDefaultImages(
 												item.user.type

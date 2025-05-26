@@ -9,9 +9,10 @@ type Props = {
 
 export async function generateStaticParams() {
 	return [
-		{ slug: "le-luu-ly-68092eeb7e5e033f9976b4ff.html" },
-		{ slug: "tinh-co-yeu-em-68092eeb7e5e033f9976b502.html" },
-		{ slug: "song-cho-het-doi-thanh-xuan-68092eeb7e5e033f9976b503.html" },
+		{ slug: "noi-nho-vo-han-683403924cdd422b64fb19f5.html" },
+		{ slug: "tinh-yeu-buong-tha-cho-chung-ta-6833fe394cdd422b64fb198d.html" },
+		{ slug: "los-voltaje-(slowed)-683401f64cdd422b64fb19c2.html" },
+		{ slug: "pho-cu-con-anh-683407da4cdd422b64fb1bf7.html" }
 	]
 }
 
