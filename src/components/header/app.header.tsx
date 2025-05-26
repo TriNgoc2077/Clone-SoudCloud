@@ -483,7 +483,7 @@ export default function AppHeader() {
                   <Fade in timeout={1200}>
                     <Tooltip title="Sign In" arrow>
                       <NavLink>
-                        <Link href="/auth/signIn" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <Link href="/auth/signin" style={{ textDecoration: 'none', color: 'inherit' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <LoginIcon fontSize="small" />
                             Login
