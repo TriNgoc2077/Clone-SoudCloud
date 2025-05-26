@@ -137,7 +137,7 @@ export const authOptions: AuthOptions = {
 		},
 	},
 	pages: {
-		signIn: "auth/signIn",
+		signIn: "auth/signin",
 	},
 };
 const handler = NextAuth(authOptions);
