@@ -1,7 +1,7 @@
 {
-  "name": "nextjs-mui-ts-template-by-hoidanit",
-  "author": "Hỏi Dân IT với Eric",
-  "description": "https://www.youtube.com/@hoidanit",
+  "name": "clone-soundcloud",
+  "author": "Cao Tri Ngoc",
+  "description": "Enjoy your music...",
   "version": "1.0.0",
   "private": true,
   "scripts": {

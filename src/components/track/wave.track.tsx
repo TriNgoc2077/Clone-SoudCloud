@@ -35,7 +35,7 @@ const WaveTrack = (props: IProps) => {
 	const isIncrease = useRef(false);
 	const router = useRouter();
 
-	const { currentTrack, setCurrentTrack } = React.useContext(
+	const { currentTrack, setCurrentTrack, currentTime, setCurrentTime } = React.useContext(
 		TrackContext
 	) as ITrackContext;
 
@@ -107,60 +107,10 @@ const WaveTrack = (props: IProps) => {
 	const wavesurfer = useWavesurfer(containerRef, optionsMemo);
 
 	useEffect(() => {
-		if (!wavesurfer) return;
-		setIsPlaying(false);
-
-		const hover = hoverRef.current!;
-		const waveform = containerRef.current!;
-		waveform.addEventListener(
-			"pointermove",
-			(e) => (hover.style.width = `${e.offsetX}px`)
-		);
-		const subscriptions = [
-			wavesurfer.once("interaction", () => {
-				wavesurfer.play();
-			}),
-			wavesurfer.on("play", () => setIsPlaying(true)),
-			wavesurfer.on("pause", () => setIsPlaying(false)),
-			wavesurfer.on("decode", (duration) => {
-				setDuration(formatTime(duration));
-			}),
-			wavesurfer.on("timeupdate", (currentTime) => {
-				setTime(formatTime(currentTime));
-			}),
-		];
-		return () => {
-			subscriptions.forEach((unsub) => unsub());
-		};
-	}, [wavesurfer]);
-
-	useEffect(() => {
-		if (currentTrack.isPlaying && wavesurfer) {
-			wavesurfer.pause();
-		}
-	}, [currentTrack]);
-
-	useEffect(() => {
 		if (track?._id && !currentTrack._id) {
 			setCurrentTrack({ ...track, isPlaying: false });
 		}
 	}, [track]);
-
-	const onPlayClick = useCallback(() => {
-		if (wavesurfer && track) {
-			wavesurfer.isPlaying() ? wavesurfer.pause() : wavesurfer.play();
-			setCurrentTrack({ ...currentTrack, isPlaying: false });
-		}
-	}, [wavesurfer]);
-
-	// Current time & duration
-	const formatTime = (seconds: number) => {
-		const minutes = Math.floor(seconds / 60);
-		const secondsRemainder = Math.round(seconds) % 60;
-		const paddedSeconds = `0${secondsRemainder}`.slice(-2);
-		return `${minutes}:${paddedSeconds}`;
-	};
-	const comments = props.comments ?? [];
 
 	const calcLeft = (moment: number) => {
 		const duration = wavesurfer?.getDuration() ?? 100;
@@ -191,6 +141,89 @@ const WaveTrack = (props: IProps) => {
 			router.refresh();
 		}
 	};
+
+	// Current time & duration
+	const formatTime = (seconds: number) => {
+		const minutes = Math.floor(seconds / 60);
+		const secondsRemainder = Math.round(seconds) % 60;
+		const paddedSeconds = `0${secondsRemainder}`.slice(-2);
+		return `${minutes}:${paddedSeconds}`;
+	};
+
+	useEffect(() => {
+		if (!wavesurfer) return;
+		setIsPlaying(false);
+
+		const hover = hoverRef.current!;
+		const waveform = containerRef.current!;
+		waveform.addEventListener(
+			"pointermove",
+			(e) => (hover.style.width = `${e.offsetX}px`)
+		);
+		const subscriptions = [
+			wavesurfer.once("interaction", () => {
+				wavesurfer.play();
+			}),
+			wavesurfer.on("play", () => {
+				setIsPlaying(true);
+				//@ts-ignore
+				setCurrentTrack((prev: any) => ({
+					...prev,
+					isPlaying: true,
+				}));
+			}),
+			wavesurfer.on("pause", () => {
+				setIsPlaying(false);
+				//@ts-ignore
+				setCurrentTrack((prev: any) => ({
+					...prev,
+					isPlaying: false,
+				}));
+			}),
+			wavesurfer.on("decode", (duration) => {
+				setDuration(formatTime(duration));
+			}),
+			wavesurfer.on("timeupdate", (time) => {
+				setTime(formatTime(time));
+				setCurrentTime(time);
+			}),
+		];
+		return () => {
+			subscriptions.forEach((unsub) => unsub());
+		};
+	}, [wavesurfer]);
+
+	useEffect(() => {
+		if (wavesurfer) {
+			if (Math.abs(wavesurfer.getCurrentTime() - currentTime) > 0.1) {
+				wavesurfer.seekTo(currentTime / wavesurfer.getDuration());
+				wavesurfer.play();
+			}
+		}
+	}, [currentTime]);
+
+	useEffect(() => {
+		if (currentTrack.isPlaying && wavesurfer) {
+			wavesurfer.play();
+		} 
+		if (!currentTrack.isPlaying && wavesurfer) {
+			wavesurfer.pause();
+		}
+	}, [currentTrack]);
+
+	const onPlayClick = useCallback(() => {
+		if (!wavesurfer || !track) return;
+
+		const isNowPlaying = wavesurfer.isPlaying();
+	
+		if (isNowPlaying) {
+			wavesurfer.pause();
+		} else {
+			wavesurfer.play();
+		}
+	}, [wavesurfer]);
+
+	const comments = props.comments ?? [];
 	return (
 		<div style={{ marginTop: 20 }}>
 			<div

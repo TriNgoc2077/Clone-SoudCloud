@@ -30,9 +30,10 @@ export const TrackContextProvider = ({
 		updatedAt: "",
 	};
 	const [currentTrack, setCurrentTrack] = useState<IShareTrack>(initValue);
+	const [currentTime, setCurrentTime] = useState<number>(0);
 
 	return (
-		<TrackContext.Provider value={{ currentTrack, setCurrentTrack }}>
+		<TrackContext.Provider value={{ currentTrack, setCurrentTrack, currentTime, setCurrentTime }}>
 			{children}
 		</TrackContext.Provider>
 	);

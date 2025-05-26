@@ -57,6 +57,8 @@ declare global {
     interface ITrackContext {
         currentTrack: IShareTrack;
         setCurrentTrack: (v: IShareTrack) => void;
+        currentTime: number;
+        setCurrentTime: (time: number) => void;
     }
 
     interface IComment {
