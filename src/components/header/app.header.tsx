@@ -243,7 +243,11 @@ export default function AppHeader() {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+    if (session?.access_token) {
+      setAnchorEl(event.currentTarget);
+    } else {
+      router.push('/auth/signin');
+    }
   };
 
   const handleMobileMenuClose = () => {

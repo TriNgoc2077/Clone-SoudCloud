@@ -32,6 +32,12 @@ const GlassFooter = styled(AppBar)(({ theme }) => ({
   borderBottom: 'none',
   position: 'fixed',
   overflow: 'hidden',
+  // Tăng chiều cao cho mobile để có đủ không gian
+  height: 'auto',
+  minHeight: '80px',
+  [theme.breakpoints.down('sm')]: {
+    minHeight: '120px', // Tăng chiều cao trên mobile
+  },
   '&::before': {
     content: '""',
     position: 'absolute',
@@ -54,13 +60,20 @@ const GlassFooter = styled(AppBar)(({ theme }) => ({
 const PlayerContainer = styled(Container)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(3),
-  padding: theme.spacing(2, 3),
+  gap: theme.spacing(2),
+  padding: theme.spacing(2, 2),
   position: 'relative',
   zIndex: 2,
+  // Layout responsive
   [theme.breakpoints.down('md')]: {
-    gap: theme.spacing(2),
-    padding: theme.spacing(1.5, 2),
+    flexDirection: 'column',
+    gap: theme.spacing(1.5),
+    padding: theme.spacing(1.5, 1),
+  },
+  [theme.breakpoints.down('sm')]: {
+    flexDirection: 'column',
+    gap: theme.spacing(1),
+    padding: theme.spacing(1, 1),
   },
 }));
 
@@ -71,12 +84,16 @@ const TrackInfoSection = styled(Box)(({ theme }) => ({
   minWidth: 280,
   maxWidth: 280,
   [theme.breakpoints.down('md')]: {
-    minWidth: 200,
-    maxWidth: 200,
+    minWidth: 'auto',
+    maxWidth: '100%',
+    width: '100%',
+    justifyContent: 'center',
   },
   [theme.breakpoints.down('sm')]: {
-    minWidth: 150,
-    maxWidth: 150,
+    minWidth: 'auto',
+    maxWidth: '100%',
+    width: '100%',
+    gap: theme.spacing(1.5),
   },
 }));
 
@@ -93,8 +110,8 @@ const EnhancedTrackAvatar = styled(Avatar)(({ theme }) => ({
     border: `2px solid ${alpha('#ffffff', 0.5)}`,
   },
   [theme.breakpoints.down('sm')]: {
-    width: 44,
-    height: 44,
+    width: 48,
+    height: 48,
   },
 }));
 
@@ -168,7 +185,11 @@ const Footer = () => {
                       src={`${process.env.NEXT_PUBLIC_BACKEND_URL_IMAGES}/${currentTrack.imgUrl}` || "/default-album.jpg"}
                       variant="rounded"
                     />
-                    <Box sx={{ flex: 1, overflow: 'hidden' }}>
+                    <Box sx={{ 
+                      flex: 1, 
+                      overflow: 'hidden',
+                      textAlign: { xs: 'center', md: 'left' }
+                    }}>
                       <Typography
                         variant="subtitle2"
                         sx={{
@@ -178,6 +199,7 @@ const Footer = () => {
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap',
                           mb: 0.5,
+                          fontSize: { xs: '0.875rem', md: '1rem' }
                         }}
                       >
                         {currentTrack.title || ""}
@@ -189,6 +211,7 @@ const Footer = () => {
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap',
+                          fontSize: { xs: '0.75rem', md: '0.875rem' }
                         }}
                       >
                         {currentTrack.description || ""}
@@ -197,7 +220,7 @@ const Footer = () => {
                   </TrackInfoSection>
                 </Fade>
 
-                {/* Audio Player Section - Styled to blend with design */}
+                {/* Audio Player Section - Responsive styling */}
                 <Fade in timeout={1000}>
                   <Box 
                     sx={{ 
@@ -205,20 +228,26 @@ const Footer = () => {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
+                      width: { xs: '100%', md: 'auto' },
+                      minWidth: { xs: '100%', md: 'auto' },
                       '& .rhap_container': {
                         backgroundColor: 'transparent !important',
                         boxShadow: 'none !important',
                         padding: '0 !important',
+                        width: '100% !important',
                       },
                       '& .rhap_main': {
-                        gap: '20px !important',
+                        gap: { xs: '12px !important', md: '20px !important' },
+                        flexWrap: { xs: 'wrap', md: 'nowrap' },
+                        justifyContent: { xs: 'center', md: 'flex-start' },
                       },
                       '& .rhap_controls-section': {
                         flex: 'unset !important',
+                        order: { xs: 1, md: 0 },
                       },
                       '& .rhap_play-pause-button': {
-                        width: '48px !important',
-                        height: '48px !important',
+                        width: { xs: '44px !important', md: '48px !important' },
+                        height: { xs: '44px !important', md: '48px !important' },
                         background: `linear-gradient(135deg, ${alpha('#ffffff', 0.25)} 0%, ${alpha('#ffffff', 0.15)} 100%) !important`,
                         backdropFilter: 'blur(10px) !important',
                         border: `1px solid ${alpha('#ffffff', 0.3)} !important`,
@@ -234,6 +263,7 @@ const Footer = () => {
                       '& .rhap_button-clear': {
                         color: `${alpha('#ffffff', 0.8)} !important`,
                         transition: 'all 0.3s ease !important',
+                        fontSize: { xs: '1.2rem !important', md: '1.5rem !important' },
                         '&:hover': {
                           color: '#ffffff !important',
                           background: `${alpha('#ffffff', 0.15)} !important`,
@@ -242,12 +272,14 @@ const Footer = () => {
                       },
                       '& .rhap_progress-section': {
                         flex: '1 1 auto !important',
-                        minWidth: '200px !important',
+                        minWidth: { xs: '100% !important', md: '200px !important' },
+                        order: { xs: 3, md: 0 },
+                        width: { xs: '100% !important', md: 'auto !important' },
                       },
                       '& .rhap_progress-bar': {
                         background: `${alpha('#ffffff', 0.3)} !important`,
                         borderRadius: '3px !important',
-                        height: '6px !important',
+                        height: { xs: '8px !important', md: '6px !important' },
                         cursor: 'pointer !important',
                       },
                       '& .rhap_progress-filled': {
@@ -256,28 +288,29 @@ const Footer = () => {
                       },
                       '& .rhap_progress-indicator': {
                         background: '#ffffff !important',
-                        width: '16px !important',
-                        height: '16px !important',
+                        width: { xs: '18px !important', md: '16px !important' },
+                        height: { xs: '18px !important', md: '16px !important' },
                         border: `2px solid ${alpha('#ffffff', 0.8)} !important`,
                         boxShadow: `0 4px 12px ${alpha('#000000', 0.3)} !important`,
-                        top: '-5px !important',
+                        top: { xs: '-5px !important', md: '-5px !important' },
                         cursor: 'pointer !important',
                       },
                       '& .rhap_time': {
                         color: `${alpha('#ffffff', 0.9)} !important`,
-                        fontSize: '0.75rem !important',
+                        fontSize: { xs: '0.7rem !important', md: '0.75rem !important' },
                         fontWeight: '500 !important',
                         fontFamily: 'monospace !important',
-                        minWidth: '40px !important',
+                        minWidth: { xs: '35px !important', md: '40px !important' },
                       },
                       '& .rhap_volume-section': {
                         flex: '0 0 auto !important',
-                        minWidth: '100px !important',
+                        minWidth: { xs: '80px !important', md: '100px !important' },
                         display: 'flex !important',
                         alignItems: 'center !important',
+                        order: { xs: 2, md: 0 },
                       },
                       '& .rhap_volume-bar-area': {
-                        width: '80px !important',
+                        width: { xs: '60px !important', md: '80px !important' },
                         height: '20px !important',
                         display: 'flex !important',
                         alignItems: 'center !important',
@@ -286,7 +319,7 @@ const Footer = () => {
                       '& .rhap_volume-bar': {
                         background: `${alpha('#ffffff', 0.3)} !important`,
                         borderRadius: '3px !important',
-                        height: '6px !important',
+                        height: { xs: '8px !important', md: '6px !important' },
                         width: '100% !important',
                         position: 'relative !important',
                         cursor: 'pointer !important',
@@ -301,8 +334,8 @@ const Footer = () => {
                       },
                       '& .rhap_volume-indicator': {
                         background: '#ffffff !important',
-                        width: '16px !important',
-                        height: '16px !important',
+                        width: { xs: '18px !important', md: '16px !important' },
+                        height: { xs: '18px !important', md: '16px !important' },
                         border: `2px solid ${alpha('#ffffff', 0.8)} !important`,
                         boxShadow: `0 4px 12px ${alpha('#000000', 0.3)} !important`,
                         borderRadius: '50% !important',
@@ -313,7 +346,8 @@ const Footer = () => {
                       },
                       '& .rhap_volume-button': {
                         color: `${alpha('#ffffff', 0.8)} !important`,
-                        marginRight: '8px !important',
+                        marginRight: { xs: '4px !important', md: '8px !important' },
+                        fontSize: { xs: '1.2rem !important', md: '1.5rem !important' },
                         '&:hover': {
                           color: '#ffffff !important',
                         },
