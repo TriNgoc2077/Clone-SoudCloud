@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 
 export const metadata: Metadata = {
+	metadataBase: new URL('https://clone-soundcloud.vercel.app'),
 	title: "Home page",
 	description: "Vibe music",
 };
