@@ -5,9 +5,12 @@ import Slider from "react-slick";
 import { Settings } from "react-slick";
 import { Box, Button, Divider, Paper, Typography } from "@mui/material";
 import { ChevronLeft, ChevronRight, PlayArrow } from "@mui/icons-material";
+import PauseIcon from "@mui/icons-material/Pause";
 import Link from "next/link";
 import { convertSlugUrl } from "@/utils/api";
 import Image from "next/image";
+import { useContext } from "react";
+import { TrackContext } from "@/lib/track.wrapper";
 
 interface IProps {
 	title: string;
@@ -15,6 +18,9 @@ interface IProps {
 }
 
 const MainSlider = (props: IProps) => {
+	const { currentTrack, setCurrentTrack } = useContext(
+			TrackContext
+		) as ITrackContext;
 	const NextArrow = (props: any) => {
 		return (
 			<Button
@@ -156,12 +162,7 @@ const MainSlider = (props: IProps) => {
 				<Slider {...settings}>
 					{props.data.map((item) => (
 						<Box key={item._id} sx={{ padding: "0 12px" }}>
-							<Link
-								href={`/track/${convertSlugUrl(item.title)}-${
-									item._id
-								}.html?audio=${item.trackUrl}`}
-								style={{ textDecoration: "none" }}
-							>
+
 								<Paper
 									elevation={0}
 									sx={{
@@ -237,48 +238,65 @@ const MainSlider = (props: IProps) => {
 													backdropFilter: "blur(10px)",
 													animation: "pulse 2s infinite",
 												}}
-											>
-												<PlayArrow sx={{ fontSize: 32, color: "#ff6b9d", marginLeft: "4px" }} />
+												onClick={(e) => {
+													e.stopPropagation();
+													if (item._id !== currentTrack._id) {
+														currentTrack.isPlaying = false;
+													}
+													setCurrentTrack({
+														...item,
+														isPlaying: !currentTrack.isPlaying,
+													});
+												}}
+											>	
+												{(currentTrack._id === null || (currentTrack._id === item._id && currentTrack.isPlaying)) ? <PauseIcon sx={{ fontSize: 32, color: "#ff6b9d", marginLeft: "4px" }} /> : <PlayArrow sx={{ fontSize: 32, color: "#ff6b9d", marginLeft: "4px" }} />}
 											</Box>
 										</Box>
 									</Box>
+									<Link
+									href={`/track/${convertSlugUrl(item.title)}-${
+										item._id
+									}.html?audio=${item.trackUrl}`}
+									style={{ textDecoration: "none" }}
+									>
+										{/* Content */}
+										<Box sx={{ padding: "20px 16px" }}>
+											<Typography
+												className="track-title"
+												variant="h6"
+												sx={{
+													fontWeight: 600,
+													marginBottom: 1,
+													color: "#2d3748",
+													fontSize: "1.1rem",
+													lineHeight: 1.3,
+													overflow: "hidden",
+													display: "-webkit-box",
+													WebkitLineClamp: 2,
+													WebkitBoxOrient: "vertical",
+													transition: "color 0.3s ease",
+												}}
+											>
+												{item.title}
+											</Typography>
+											
+											<Typography
+												variant="body2"
+												sx={{
+													color: "#718096",
+													fontSize: "0.9rem",
+													lineHeight: 1.4,
+													overflow: "hidden",
+													display: "-webkit-box",
+													WebkitLineClamp: 2,
+													WebkitBoxOrient: "vertical",
+												}}
+											>
+												{item.description}
+											</Typography>
+										</Box>
+									</Link>
 
-									{/* Content */}
-									<Box sx={{ padding: "20px 16px" }}>
-										<Typography
-											className="track-title"
-											variant="h6"
-											sx={{
-												fontWeight: 600,
-												marginBottom: 1,
-												color: "#2d3748",
-												fontSize: "1.1rem",
-												lineHeight: 1.3,
-												overflow: "hidden",
-												display: "-webkit-box",
-												WebkitLineClamp: 2,
-												WebkitBoxOrient: "vertical",
-												transition: "color 0.3s ease",
-											}}
-										>
-											{item.title}
-										</Typography>
-										
-										<Typography
-											variant="body2"
-											sx={{
-												color: "#718096",
-												fontSize: "0.9rem",
-												lineHeight: 1.4,
-												overflow: "hidden",
-												display: "-webkit-box",
-												WebkitLineClamp: 2,
-												WebkitBoxOrient: "vertical",
-											}}
-										>
-											{item.description}
-										</Typography>
-									</Box>
 
 									{/* Gradient Border Effect */}
 									<Box
@@ -300,7 +318,6 @@ const MainSlider = (props: IProps) => {
 										}}
 									/>
 								</Paper>
-							</Link>
 						</Box>
 					))}
 				</Slider>
