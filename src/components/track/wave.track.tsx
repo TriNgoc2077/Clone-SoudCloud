@@ -47,57 +47,56 @@ const WaveTrack = (props: IProps) => {
 		if (typeof window !== "undefined") {
 			const canvas = document.createElement("canvas");
 			const ctx = canvas.getContext("2d")!;
-			// Define the waveform gradient
+			// Define the waveform gradient - Pink theme
 			gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.75);
-			gradient.addColorStop(0, "rgb(145, 108, 167)"); // Top color
+			gradient.addColorStop(0, "rgba(255, 182, 193, 0.8)"); // Light pink top
 			gradient.addColorStop(
 				(canvas.height * 0.7) / canvas.height,
-				"rgb(161, 159, 176)"
-			); // Top color
+				"rgba(255, 105, 180, 0.4)"
+			); // Hot pink middle
 			gradient.addColorStop(
 				(canvas.height * 0.7 + 1) / canvas.height,
-				"#ffffff"
+				"rgba(255, 255, 255, 0.9)"
 			); // White line
 			gradient.addColorStop(
 				(canvas.height * 0.7 + 2) / canvas.height,
-				"#ffffff"
+				"rgba(255, 255, 255, 0.9)"
 			); // White line
 			gradient.addColorStop(
 				(canvas.height * 0.7 + 3) / canvas.height,
-				"#B1B1B1"
-			); // Bottom color
-			gradient.addColorStop(1, "#B1B1B1"); // Bottom color
+				"rgba(255, 182, 193, 0.6)"
+			); // Pink bottom
+			gradient.addColorStop(1, "rgba(255, 182, 193, 0.6)"); // Pink bottom
 
-			// Define the progress gradient
+			// Define the progress gradient - Bright pink theme
 			progressGradient = ctx.createLinearGradient(
 				0,
 				0,
 				0,
 				canvas.height * 1.35
 			);
-			progressGradient.addColorStop(0, "rgb(85, 175, 139)"); // Top color
+			progressGradient.addColorStop(0, "rgba(255, 20, 147, 0.9)"); // Deep pink top
 			progressGradient.addColorStop(
 				(canvas.height * 0.7) / canvas.height,
-				"rgb(184, 137, 94)"
-			); // Top color
+				"rgba(255, 105, 180, 0.8)"
+			); // Hot pink middle
 			progressGradient.addColorStop(
 				(canvas.height * 0.7 + 1) / canvas.height,
-				"rgb(131, 103, 72)"
+				"rgba(255, 255, 255, 1)"
 			); // White line
 			progressGradient.addColorStop(
 				(canvas.height * 0.7 + 2) / canvas.height,
-				"#ffffff"
+				"rgba(255, 255, 255, 1)"
 			); // White line
 			progressGradient.addColorStop(
 				(canvas.height * 0.7 + 3) / canvas.height,
-				"#F6B094"
-			); // Bottom color
-			progressGradient.addColorStop(1, "#F6B094"); // Bottom color
+				"rgba(255, 105, 180, 0.7)"
+			); // Hot pink bottom
+			progressGradient.addColorStop(1, "rgba(255, 105, 180, 0.7)"); // Hot pink bottom
 		}
 
 		return {
 			waveColor: gradient,
-			// progressColor: "rgba(0, 0, 100, 0.5)",
 			progressColor: progressGradient,
 			barWidth: 2,
 			height: 100,
@@ -237,181 +236,224 @@ const WaveTrack = (props: IProps) => {
 
 	const comments = props.comments ?? [];
 	return (
-		<div style={{ marginTop: 20 }}>
+		<div className="wave-track-container" style={{ marginTop: 20 }}>
 			<div
+				className="wave-track-main"
 				style={{
 					display: "flex",
-					borderRadius: "10px",
+					borderRadius: "12px",
 					gap: 15,
 					padding: 20,
-					height: 400,
+					minHeight: 350,
 					background:
-						"linear-gradient(135deg, rgb(162, 139, 175) 0%, rgb(16, 11, 19) 100%",
+						"linear-gradient(135deg, rgb(162, 139, 175)  0%, #FF69B4 100%)",
+					flexDirection: "column",
+					boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
 				}}
 				onClick={() => {
 					onPlayClick();
 					handleFirstPlay();
 				}}
 			>
-				<div
-					className="left"
+				{/* Desktop Layout */}
+				<div 
+					className="desktop-layout"
 					style={{
-						width: "75%",
-						height: "calc(100% - 10px)",
 						display: "flex",
-						flexDirection: "column",
-						justifyContent: "space-between",
+						gap: 20,
+						height: "100%",
 					}}
 				>
-					<div className="info" style={{ display: "flex" }}>
-						<div>
+					<div
+						className="left-section"
+						style={{
+							flex: 1,
+							display: "flex",
+							flexDirection: "column",
+							justifyContent: "space-between",
+							minWidth: 0,
+						}}
+					>
+						{/* Track Info */}
+						<div className="track-info" style={{ display: "flex", alignItems: "center", marginBottom: 20 }}>
 							<div
+								className="play-button"
 								style={{
 									borderRadius: "50%",
-									background: "rgb(0, 0, 0)",
-									height: "50px",
-									width: "50px",
+									background: "rgba(0, 0, 0, 0.8)",
+									height: "60px",
+									width: "60px",
 									display: "flex",
 									alignItems: "center",
 									justifyContent: "center",
 									cursor: "pointer",
+									backdropFilter: "blur(10px)",
+									border: "2px solid rgba(233, 223, 255, 0.3)",
+									transition: "all 0.3s ease",
 								}}
 							>
 								{isPlaying === true ? (
 									<PauseIcon
 										sx={{
-											fontSize: 30,
+											fontSize: 32,
 											color: "rgb(233, 223, 255)",
 										}}
 									/>
 								) : (
 									<PlayArrowIcon
 										sx={{
-											fontSize: 30,
+											fontSize: 32,
 											color: "rgb(233, 223, 255)",
 										}}
 									/>
 								)}
 							</div>
-						</div>
-						<div style={{ marginLeft: 20 }}>
-							<div
-								style={{
-									padding: "0 5px",
-									// background: "#333",
-									fontSize: 30,
-									width: "fit-content",
-									color: "rgb(233, 223, 255)",
-								}}
-							>
-								{track?.title || "Song Name"}
+							<div style={{ marginLeft: 20, flex: 1, minWidth: 0 }}>
+								<div
+									className="track-title"
+									style={{
+										fontSize: "clamp(20px, 4vw, 32px)",
+										fontWeight: "700",
+										color: "rgb(233, 223, 255)",
+										marginBottom: 8,
+										textShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
+										wordBreak: "break-word",
+									}}
+								>
+									{track?.title || "Song Name"}
+								</div>
+								<div
+									className="track-description"
+									style={{
+										fontSize: "clamp(16px, 3vw, 20px)",
+										color: "rgba(233, 223, 255, 0.8)",
+										fontWeight: "400",
+										wordBreak: "break-word",
+									}}
+								>
+									{track?.description || "Singer"}
+								</div>
 							</div>
-							<div
-								style={{
-									padding: "0 5px",
-									marginTop: 10,
-									// background: "#333",
-									fontSize: 20,
-									width: "fit-content",
-									color: "rgb(233, 223, 255)",
-								}}
-							>
-								{track?.description || "Singer"}
-							</div>
 						</div>
-					</div>
-					<div
-						ref={containerRef}
-						className="wave-form-container"
-						onClick={(e) => {
-							e.stopPropagation();
-						}}
-					>
-						<div className="time">{time}</div>
-						<div className="duration">{duration}</div>
-						<div className="hover-wave" ref={hoverRef}></div>
-						<div
-							className="overlay"
-							style={{
-								position: "absolute",
-								height: "30px",
-								// width: "100%",
-								bottom: 0,
-								color: "rgb(162, 139, 175)",
-								backdropFilter: "brightness(0.5)",
-							}}
-						></div>
-						<div
-							className="comments"
-							style={{ position: "relative" }}
-						>
-							{comments.map((item) => {
-								return (
-									<Tooltip
-										key={item._id}
-										title={item.content}
-										componentsProps={{
-											tooltip: {
-												sx: {
-													width: 170,
-													height: 70,
-													fontSize: "18px",
-													backgroundColor: "pink",
-													color: "rgb(116, 106, 124)",
-												},
-											},
-										}}
-									>
-										<Image
-											onPointerMove={(e) => {
-												const hover = hoverRef.current!;
-												hover.style.width = calcLeft(
-													item.moment
-												);
-											}}
-											onClick={(e) => {
-												if (wavesurfer) {
-													const duration = wavesurfer.getDuration();
-													wavesurfer.seekTo(item.moment / duration);
-													wavesurfer.play();
-												}
 
+						{/* Waveform */}
+						<div
+							ref={containerRef}
+							className="wave-form-container"
+							style={{
+								position: "relative",
+								background: "rgba(0, 0, 0, 0.2)",
+								borderRadius: "8px",
+								padding: "10px",
+								backdropFilter: "blur(5px)",
+							}}
+							onClick={(e) => {
+								e.stopPropagation();
+							}}
+						>
+							<div className="time" style={{ 
+								position: "absolute", 
+								top: "5px", 
+								left: "10px", 
+								color: "rgb(233, 223, 255)",
+								fontSize: "14px",
+								fontWeight: "600",
+								zIndex: 10
+							}}>{time}</div>
+							<div className="duration" style={{ 
+								position: "absolute", 
+								top: "5px", 
+								right: "10px", 
+								color: "rgb(233, 223, 255)",
+								fontSize: "14px",
+								fontWeight: "600",
+								zIndex: 10
+							}}>{duration}</div>
+							<div className="hover-wave" ref={hoverRef}></div>
+							<div
+								className="overlay"
+								style={{
+									position: "absolute",
+									height: "30px",
+									bottom: 0,
+									color: "rgb(162, 139, 175)",
+									backdropFilter: "brightness(0.5)",
+								}}
+							></div>
+							
+							{/* Comments on waveform */}
+							<div
+								className="comments-on-wave"
+								style={{ position: "relative" }}
+							>
+								{comments.map((item) => {
+									return (
+										<Tooltip
+											key={item._id}
+											title={item.content}
+											componentsProps={{
+												tooltip: {
+													sx: {
+														maxWidth: 200,
+														fontSize: "14px",
+														backgroundColor: "rgba(255, 255, 255, 0.95)",
+														color: "rgb(116, 106, 124)",
+														borderRadius: "8px",
+														boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+														backdropFilter: "blur(10px)",
+														border: "1px solid rgba(255, 255, 255, 0.2)",
+													},
+												},
 											}}
-											src={fetchDefaultImages(
-												item.user.type
-											)}
-											alt=""
-											style={{
-												position: "absolute",
-												top: "78px",
-												zIndex: 20,
-												left: calcLeft(item.moment),
-												borderRadius: "50%",
-											}}
-											height={20}
-											width={20}
-										/>
-									</Tooltip>
-								);
-							})}
+										>
+											<Image
+												onPointerMove={(e) => {
+													const hover = hoverRef.current!;
+													hover.style.width = calcLeft(
+														item.moment
+													);
+												}}
+												onClick={(e) => {
+													if (wavesurfer) {
+														const duration = wavesurfer.getDuration();
+														wavesurfer.seekTo(item.moment / duration);
+														wavesurfer.play();
+													}
+												}}
+												src={fetchDefaultImages(
+													item.user.type
+												)}
+												alt=""
+												style={{
+													position: "absolute",
+													top: "78px",
+													zIndex: 20,
+													left: calcLeft(item.moment),
+													borderRadius: "50%",
+													border: "2px solid rgba(255, 255, 255, 0.8)",
+													cursor: "pointer",
+													transition: "transform 0.2s ease",
+												}}
+												height={24}
+												width={24}
+											/>
+										</Tooltip>
+									);
+								})}
+							</div>
 						</div>
 					</div>
-				</div>
-				<div
-					className="right"
-					style={{
-						width: "25%",
-						padding: 15,
-						display: "flex",
-						alignItems: "center",
-					}}
-				>
+
+					{/* Album Art - Desktop */}
 					<div
+						className="album-art-desktop"
 						style={{
-							background: "#ccc",
-							width: 250,
-							height: 250,
-							borderRadius: "10px",
+							width: "280px",
+							height: "280px",
+							flexShrink: 0,
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "center",
 						}}
 					>
 						<Box
@@ -423,19 +465,132 @@ const WaveTrack = (props: IProps) => {
 								width: "100%",
 								height: "100%",
 								objectFit: "cover",
-								display: "block",
-								borderRadius: "10px",
+								borderRadius: "12px",
+								boxShadow: "0 8px 24px rgba(0, 0, 0, 0.4)",
+								border: "3px solid rgba(255, 255, 255, 0.1)",
 							}}
 						/>
 					</div>
 				</div>
+
+				{/* Mobile Album Art */}
+				<div
+					className="album-art-mobile"
+					style={{
+						display: "none",
+						width: "100%",
+						height: "200px",
+						marginTop: 20,
+					}}
+				>
+					<Box
+						component="img"
+						onClick={(e) => e.stopPropagation()}
+						src={`${process.env.NEXT_PUBLIC_BACKEND_URL_IMAGES}/${track?.imgUrl}`}
+						alt="Song image"
+						sx={{
+							width: "100%",
+							height: "100%",
+							objectFit: "cover",
+							borderRadius: "12px",
+							boxShadow: "0 8px 24px rgba(0, 0, 0, 0.4)",
+							border: "3px solid rgba(255, 255, 255, 0.1)",
+						}}
+					/>
+				</div>
 			</div>
+
 			<LikeTrack track={track!} />
-			<CommentTrack
-				comments={comments}
-				track={track!}
-				wavesurfer={wavesurfer}
-			/>
+			
+			{/* Enhanced Comment Section */}
+			<div 
+				className="comment-section-enhanced"
+				style={{
+					marginTop: 24,
+					background: "linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%)",
+					borderRadius: "16px",
+					border: "1px solid rgba(255, 255, 255, 0.1)",
+					backdropFilter: "blur(10px)",
+					overflow: "hidden",
+				}}
+			>
+				<CommentTrack
+					comments={comments}
+					track={track!}
+					wavesurfer={wavesurfer}
+				/>
+			</div>
+
+			{/* Responsive Styles */}
+			<style jsx>{`
+				@media (max-width: 768px) {
+					.wave-track-main {
+						padding: 16px !important;
+						gap: 12px !important;
+					}
+					
+					.desktop-layout {
+						flex-direction: column !important;
+						gap: 0 !important;
+					}
+					
+					.album-art-desktop {
+						display: none !important;
+					}
+					
+					.album-art-mobile {
+						display: block !important;
+					}
+					
+					.track-info {
+						margin-bottom: 16px !important;
+					}
+					
+					.play-button {
+						height: 50px !important;
+						width: 50px !important;
+					}
+					
+					.wave-form-container {
+						margin-top: 16px;
+					}
+				}
+				
+				@media (max-width: 480px) {
+					.wave-track-main {
+						padding: 12px !important;
+						margin: 0 -8px;
+					}
+					
+					.track-info {
+						flex-direction: column !important;
+						text-align: center !important;
+						gap: 12px !important;
+					}
+					
+					.track-info > div:last-child {
+						margin-left: 0 !important;
+					}
+					
+					.album-art-mobile {
+						height: 150px !important;
+						margin-top: 12px !important;
+					}
+				}
+				
+				/* Hover effects */
+				@media (hover: hover) {
+					.play-button:hover {
+						transform: scale(1.05);
+						background: rgba(0, 0, 0, 0.9) !important;
+						border-color: rgba(233, 223, 255, 0.5) !important;
+					}
+					
+					.comments-on-wave img:hover {
+						transform: scale(1.2);
+					}
+				}
+			`}</style>
 		</div>
 	);
 };
