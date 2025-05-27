@@ -32,6 +32,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import { fetchDefaultImages } from "@/utils/api";
 // import ActiveLink from "./active.link";
 import { pink, purple } from "@mui/material/colors";
+import { useToast } from "@/utils/toast";
 
 const ActiveLink = ({ href, children, ...props }: any) => (
   <Link href={href} {...props} style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -233,6 +234,7 @@ const AnimatedBadge = styled(Badge)(({ theme }) => ({
 
 export default function AppHeader() {
   const { data: session } = useSession();
+  const toast = useToast();
   const router = useRouter();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -301,22 +303,36 @@ export default function AppHeader() {
         </Link>
       </MenuItem>
       <Divider sx={{ mx: 1, borderColor: alpha(pink[300], 0.3) }} />
-      <MenuItem onClick={handleClose} sx={{ py: 1.5 }}>
-        <ListItemIcon>
-          <PersonAdd fontSize="small" sx={{ color: pink[500] }} />
-        </ListItemIcon>
-        <Typography variant="body2" fontWeight={500}>
-          Add another account
-        </Typography>
-      </MenuItem>
-      <MenuItem onClick={handleClose} sx={{ py: 1.5 }}>
-        <ListItemIcon>
-          <Settings fontSize="small" sx={{ color: pink[500] }} />
-        </ListItemIcon>
-        <Typography variant="body2" fontWeight={500}>
-          Settings
-        </Typography>
-      </MenuItem>
+      <Link href={`/playlist`} style={{textDecoration: "none", color: "black"}}>
+        <MenuItem onClick={handleClose} sx={{ py: 1.5 }}>
+          <ListItemIcon>
+            <QueueMusicIcon fontSize="small" sx={{ color: pink[500] }} />
+          </ListItemIcon>
+          <Typography variant="body2" fontWeight={500}>
+            Playlists
+          </Typography>
+        </MenuItem>
+      </Link>
+      <Link href={`/like`} style={{textDecoration: "none", color: "black"}}>
+        <MenuItem onClick={handleClose} sx={{ py: 1.5 }}>
+          <ListItemIcon>
+            <FavoriteIcon fontSize="small" sx={{ color: pink[500] }} />
+          </ListItemIcon>
+          <Typography variant="body2" fontWeight={500}>
+            Likes
+          </Typography>
+        </MenuItem>
+      </Link>
+      <Link href={`/track/upload`} style={{textDecoration: "none", color: "black"}}>
+        <MenuItem onClick={handleClose} sx={{ py: 1.5 }}>
+          <ListItemIcon>
+            <CloudUploadIcon fontSize="small" sx={{ color: pink[500] }} />
+          </ListItemIcon>
+          <Typography variant="body2" fontWeight={500}>
+            Upload
+          </Typography>
+        </MenuItem>
+      </Link>
       <MenuItem
         onClick={() => {
           handleClose();
@@ -352,7 +368,12 @@ export default function AppHeader() {
       onClose={handleMobileMenuClose}
       TransitionComponent={Fade}
     >
-      <MenuItem onClick={handleMobileMenuClose} sx={{ py: 1.5 }}>
+      <MenuItem onClick={() => {
+          handleMobileMenuClose();     
+          toast.warning("Under development !");
+        }} 
+        sx={{ py: 1.5 }}
+      >
         <IconButton size="large" color="inherit" sx={{ color: pink[500] }}>
           <AnimatedBadge badgeContent={4} color="error">
             <MailIcon />
@@ -360,7 +381,12 @@ export default function AppHeader() {
         </IconButton>
         <Typography ml={1} fontWeight={500}>Messages</Typography>
       </MenuItem>
-      <MenuItem onClick={handleMobileMenuClose} sx={{ py: 1.5 }}>
+      <MenuItem onClick={() => {
+          handleMobileMenuClose();     
+          toast.warning("Under development !");
+        }} 
+        sx={{ py: 1.5 }}
+      >
         <IconButton size="large" color="inherit" sx={{ color: pink[500] }}>
           <AnimatedBadge badgeContent={17} color="error">
             <NotificationsIcon />

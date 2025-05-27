@@ -37,6 +37,7 @@ const ProfileTrack = (props: IProps) => {
 		<Card
 			sx={{
 				display: "flex",
+				flexDirection: { xs: "column", sm: "row" }, // Stack vertically on mobile
 				background: "linear-gradient(135deg, #ffeef8 0%, #fff0f8 50%, #ffe8f5 100%)",
 				backdropFilter: "blur(10px)",
 				border: "1px solid rgba(255, 107, 157, 0.1)",
@@ -88,232 +89,35 @@ const ProfileTrack = (props: IProps) => {
 				}}
 			/>
 
-			{/* Content Section */}
-			<Box
-				sx={{
-					display: "flex",
-					flexDirection: "column",
-					flex: 1,
-					position: "relative",
-					zIndex: 2,
-				}}
-			>
-				<CardContent sx={{ flex: "1 0 auto", padding: "24px" }}>
-					{/* Track Status Chip */}
-					{isPlaying && (
-						<Chip
-							label="Now Playing"
-							size="small"
-							sx={{
-								mb: 2,
-								background: "rgba(255, 255, 255, 0.2)",
-								color: "white",
-								fontSize: "0.75rem",
-								fontWeight: 600,
-								backdropFilter: "blur(10px)",
-								animation: "pulse 2s infinite",
-							}}
-						/>
-					)}
-
-					{/* Track Title */}
-					<Typography
-						component="a"
-						variant="h5"
-						href={`/track/${convertSlugUrl(data.title)}-${
-							data._id
-						}.html?audio=${data.trackUrl}`}
-						sx={{
-							textDecoration: "none",
-							color: isPlaying ? "white" : "#2d3748",
-							fontWeight: 700,
-							fontSize: "1.5rem",
-							lineHeight: 1.3,
-							marginBottom: 1,
-							display: "block",
-							transition: "all 0.3s ease",
-							"&:hover": {
-								color: isPlaying ? "#ffe8f5" : "#ff6b9d",
-								textShadow: isPlaying ? "0 2px 10px rgba(255, 255, 255, 0.3)" : "none",
-							},
-						}}
-					>
-						{data.title}
-					</Typography>
-
-					{/* Track Description */}
-					<Typography
-						variant="subtitle1"
-						component="div"
-						sx={{
-							color: isPlaying ? "rgba(255, 255, 255, 0.9)" : "#718096",
-							fontSize: "1rem",
-							lineHeight: 1.5,
-							marginBottom: 2,
-						}}
-					>
-						{data.description}
-					</Typography>
-
-					{/* Action Buttons Row */}
-					<Box
-						sx={{
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "space-between",
-							marginTop: "auto",
-						}}
-					>
-						{/* Playback Controls */}
-						<Box sx={{ display: "flex", alignItems: "center" }}>
-							<IconButton
-								aria-label="previous"
-								sx={{
-									color: isPlaying ? "white" : "#ff6b9d",
-									transition: "all 0.3s ease",
-									"&:hover": {
-										backgroundColor: isPlaying 
-											? "rgba(255, 255, 255, 0.1)" 
-											: "rgba(255, 107, 157, 0.1)",
-										transform: "scale(1.1)",
-									},
-								}}
-							>
-								{theme.direction === "rtl" ? (
-									<SkipNextIcon />
-								) : (
-									<SkipPreviousIcon />
-								)}
-							</IconButton>
-
-							{/* Main Play/Pause Button */}
-							<IconButton
-								aria-label="play/pause"
-								onClick={() => {
-									if (data._id !== currentTrack._id) {
-										currentTrack.isPlaying = false;
-									}
-									setCurrentTrack({
-										...data,
-										isPlaying: !currentTrack.isPlaying,
-									});
-								}}
-								sx={{
-									width: 60,
-									height: 60,
-									margin: "0 8px",
-									background: isPlaying 
-										? "rgba(255, 255, 255, 0.2)" 
-										: "linear-gradient(135deg, #ff6b9d, #ff8a9b)",
-									color: isPlaying ? "white" : "white",
-									backdropFilter: "blur(10px)",
-									transition: "all 0.3s ease",
-									"&:hover": {
-										transform: "scale(1.1)",
-										background: isPlaying 
-											? "rgba(255, 255, 255, 0.3)" 
-											: "linear-gradient(135deg, #ff8a9b, #ff6b9d)",
-										boxShadow: "0 8px 25px rgba(255, 107, 157, 0.4)",
-									},
-								}}
-							>
-								{isPlaying ? (
-									<PauseIcon sx={{ height: 32, width: 32 }} />
-								) : (
-									<PlayArrowIcon sx={{ height: 32, width: 32, marginLeft: "2px" }} />
-								)}
-							</IconButton>
-
-							<IconButton
-								aria-label="next"
-								sx={{
-									color: isPlaying ? "white" : "#ff6b9d",
-									transition: "all 0.3s ease",
-									"&:hover": {
-										backgroundColor: isPlaying 
-											? "rgba(255, 255, 255, 0.1)" 
-											: "rgba(255, 107, 157, 0.1)",
-										transform: "scale(1.1)",
-									},
-								}}
-							>
-								{theme.direction === "rtl" ? (
-									<SkipPreviousIcon />
-								) : (
-									<SkipNextIcon />
-								)}
-							</IconButton>
-						</Box>
-
-						{/* Secondary Actions */}
-						<Box
-							sx={{
-								display: "flex",
-								alignItems: "center",
-								opacity: isHovered || isPlaying ? 1 : 0,
-								transition: "opacity 0.3s ease",
-							}}
-						>
-							<IconButton
-								size="small"
-								sx={{
-									color: isPlaying ? "white" : "#ff6b9d",
-									marginLeft: 1,
-									"&:hover": {
-										backgroundColor: isPlaying 
-											? "rgba(255, 255, 255, 0.1)" 
-											: "rgba(255, 107, 157, 0.1)",
-									},
-								}}
-							>
-								<FavoriteIcon fontSize="small" />
-							</IconButton>
-							<IconButton
-								size="small"
-								sx={{
-									color: isPlaying ? "white" : "#ff6b9d",
-									marginLeft: 1,
-									"&:hover": {
-										backgroundColor: isPlaying 
-											? "rgba(255, 255, 255, 0.1)" 
-											: "rgba(255, 107, 157, 0.1)",
-									},
-								}}
-							>
-								<ShareIcon fontSize="small" />
-							</IconButton>
-							<IconButton
-								size="small"
-								sx={{
-									color: isPlaying ? "white" : "#ff6b9d",
-									marginLeft: 1,
-									"&:hover": {
-										backgroundColor: isPlaying 
-											? "rgba(255, 255, 255, 0.1)" 
-											: "rgba(255, 107, 157, 0.1)",
-									},
-								}}
-							>
-								<MoreVertIcon fontSize="small" />
-							</IconButton>
-						</Box>
-					</Box>
-				</CardContent>
-			</Box>
-
-			{/* Album Art */}
+			{/* Album Art - Show first on mobile */}
 			<Box
 				sx={{
 					position: "relative",
-					width: 180,
-					height: 180,
-					margin: 2,
-					borderRadius: "16px",
+					width: { 
+						xs: "100%", // Full width on mobile
+						sm: 180 
+					},
+					height: { 
+						xs: 200, // Fixed height on mobile
+						sm: 180 
+					},
+					margin: { 
+						xs: 0, // No margin on mobile
+						sm: 2 
+					},
+					borderRadius: { 
+						xs: 0, // No border radius on mobile for seamless look
+						sm: "16px" 
+					},
 					overflow: "hidden",
 					flexShrink: 0,
 					transition: "all 0.4s ease",
+					order: { xs: -1, sm: 1 }, // Show first on mobile, last on desktop
 					"&:hover": {
-						transform: "scale(1.05)",
+						transform: { 
+							xs: "none", // Disable transform on mobile to prevent layout issues
+							sm: "scale(1.05)" 
+						},
 					},
 				}}
 			>
@@ -390,6 +194,262 @@ const ProfileTrack = (props: IProps) => {
 						</Box>
 					</Box>
 				)}
+			</Box>
+
+			{/* Content Section */}
+			<Box
+				sx={{
+					display: "flex",
+					flexDirection: "column",
+					flex: 1,
+					position: "relative",
+					zIndex: 2,
+					minWidth: 0, // Prevent flex item from overflowing
+				}}
+			>
+				<CardContent sx={{ 
+					flex: "1 0 auto", 
+					padding: { 
+						xs: "16px", // Reduced padding on mobile
+						sm: "24px" 
+					} 
+				}}>
+					{/* Track Status Chip */}
+					{isPlaying && (
+						<Chip
+							label="Now Playing"
+							size="small"
+							sx={{
+								mb: 2,
+								background: "rgba(255, 255, 255, 0.2)",
+								color: "white",
+								fontSize: "0.75rem",
+								fontWeight: 600,
+								backdropFilter: "blur(10px)",
+								animation: "pulse 2s infinite",
+							}}
+						/>
+					)}
+
+					{/* Track Title */}
+					<Typography
+						component="a"
+						variant="h5"
+						href={`/track/${convertSlugUrl(data.title)}-${
+							data._id
+						}.html?audio=${data.trackUrl}`}
+						sx={{
+							textDecoration: "none",
+							color: isPlaying ? "white" : "#2d3748",
+							fontWeight: 700,
+							fontSize: { 
+								xs: "1.25rem", // Smaller on mobile
+								sm: "1.5rem" 
+							},
+							lineHeight: 1.3,
+							marginBottom: 1,
+							display: "block",
+							transition: "all 0.3s ease",
+							overflow: "hidden",
+							textOverflow: "ellipsis",
+							whiteSpace: { xs: "nowrap", sm: "normal" }, // Prevent wrapping on mobile
+							"&:hover": {
+								color: isPlaying ? "#ffe8f5" : "#ff6b9d",
+								textShadow: isPlaying ? "0 2px 10px rgba(255, 255, 255, 0.3)" : "none",
+							},
+						}}
+					>
+						{data.title}
+					</Typography>
+
+					{/* Track Description */}
+					<Typography
+						variant="subtitle1"
+						component="div"
+						sx={{
+							color: isPlaying ? "rgba(255, 255, 255, 0.9)" : "#718096",
+							fontSize: { 
+								xs: "0.875rem", // Smaller on mobile
+								sm: "1rem" 
+							},
+							lineHeight: 1.5,
+							marginBottom: 2,
+							overflow: "hidden",
+							textOverflow: "ellipsis",
+							display: "-webkit-box",
+							WebkitLineClamp: { xs: 2, sm: 3 }, // Limit lines on mobile
+							WebkitBoxOrient: "vertical",
+						}}
+					>
+						{data.description}
+					</Typography>
+
+					{/* Action Buttons Row */}
+					<Box
+						sx={{
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "space-between",
+							marginTop: "auto",
+							flexWrap: { xs: "wrap", sm: "nowrap" }, // Allow wrapping on mobile
+							gap: { xs: 1, sm: 0 },
+						}}
+					>
+						{/* Playback Controls */}
+						<Box sx={{ 
+							display: "flex", 
+							alignItems: "center",
+							width: { xs: "100%", sm: "auto" }, // Full width on mobile
+							justifyContent: { xs: "center", sm: "flex-start" },
+						}}>
+							<IconButton
+								aria-label="previous"
+								sx={{
+									color: isPlaying ? "white" : "#ff6b9d",
+									transition: "all 0.3s ease",
+									padding: { xs: "6px", sm: "8px" }, // Smaller padding on mobile
+									"&:hover": {
+										backgroundColor: isPlaying 
+											? "rgba(255, 255, 255, 0.1)" 
+											: "rgba(255, 107, 157, 0.1)",
+										transform: "scale(1.1)",
+									},
+								}}
+							>
+								{theme.direction === "rtl" ? (
+									<SkipNextIcon />
+								) : (
+									<SkipPreviousIcon />
+								)}
+							</IconButton>
+
+							{/* Main Play/Pause Button */}
+							<IconButton
+								aria-label="play/pause"
+								onClick={() => {
+									if (data._id !== currentTrack._id) {
+										currentTrack.isPlaying = false;
+									}
+									setCurrentTrack({
+										...data,
+										isPlaying: !currentTrack.isPlaying,
+									});
+								}}
+								sx={{
+									width: { xs: 50, sm: 60 }, // Smaller on mobile
+									height: { xs: 50, sm: 60 },
+									margin: "0 8px",
+									background: isPlaying 
+										? "rgba(255, 255, 255, 0.2)" 
+										: "linear-gradient(135deg, #ff6b9d, #ff8a9b)",
+									color: isPlaying ? "white" : "white",
+									backdropFilter: "blur(10px)",
+									transition: "all 0.3s ease",
+									"&:hover": {
+										transform: "scale(1.1)",
+										background: isPlaying 
+											? "rgba(255, 255, 255, 0.3)" 
+											: "linear-gradient(135deg, #ff8a9b, #ff6b9d)",
+										boxShadow: "0 8px 25px rgba(255, 107, 157, 0.4)",
+									},
+								}}
+							>
+								{isPlaying ? (
+									<PauseIcon sx={{ 
+										height: { xs: 24, sm: 32 }, 
+										width: { xs: 24, sm: 32 } 
+									}} />
+								) : (
+									<PlayArrowIcon sx={{ 
+										height: { xs: 24, sm: 32 }, 
+										width: { xs: 24, sm: 32 }, 
+										marginLeft: "2px" 
+									}} />
+								)}
+							</IconButton>
+
+							<IconButton
+								aria-label="next"
+								sx={{
+									color: isPlaying ? "white" : "#ff6b9d",
+									transition: "all 0.3s ease",
+									padding: { xs: "6px", sm: "8px" },
+									"&:hover": {
+										backgroundColor: isPlaying 
+											? "rgba(255, 255, 255, 0.1)" 
+											: "rgba(255, 107, 157, 0.1)",
+										transform: "scale(1.1)",
+									},
+								}}
+							>
+								{theme.direction === "rtl" ? (
+									<SkipPreviousIcon />
+								) : (
+									<SkipNextIcon />
+								)}
+							</IconButton>
+						</Box>
+
+						{/* Secondary Actions */}
+						<Box
+							sx={{
+								display: "flex",
+								alignItems: "center",
+								opacity: { 
+									xs: 1, // Always visible on mobile
+									sm: isHovered || isPlaying ? 1 : 0 
+								},
+								transition: "opacity 0.3s ease",
+								width: { xs: "100%", sm: "auto" },
+								justifyContent: { xs: "center", sm: "flex-end" },
+								marginTop: { xs: 1, sm: 0 },
+							}}
+						>
+							<IconButton
+								size="small"
+								sx={{
+									color: isPlaying ? "white" : "#ff6b9d",
+									marginLeft: 1,
+									"&:hover": {
+										backgroundColor: isPlaying 
+											? "rgba(255, 255, 255, 0.1)" 
+											: "rgba(255, 107, 157, 0.1)",
+									},
+								}}
+							>
+								<FavoriteIcon fontSize="small" />
+							</IconButton>
+							<IconButton
+								size="small"
+								sx={{
+									color: isPlaying ? "white" : "#ff6b9d",
+									marginLeft: 1,
+									"&:hover": {
+										backgroundColor: isPlaying 
+											? "rgba(255, 255, 255, 0.1)" 
+											: "rgba(255, 107, 157, 0.1)",
+									},
+								}}
+							>
+								<ShareIcon fontSize="small" />
+							</IconButton>
+							<IconButton
+								size="small"
+								sx={{
+									color: isPlaying ? "white" : "#ff6b9d",
+									marginLeft: 1,
+									"&:hover": {
+										backgroundColor: isPlaying 
+											? "rgba(255, 255, 255, 0.1)" 
+											: "rgba(255, 107, 157, 0.1)",
+									},
+								}}
+							>
+								<MoreVertIcon fontSize="small" />
+							</IconButton>
+						</Box>
+					</Box>
+				</CardContent>
 			</Box>
 
 			{/* Custom Styles */}

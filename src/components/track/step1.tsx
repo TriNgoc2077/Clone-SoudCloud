@@ -5,6 +5,7 @@ import { useCallback, useState } from "react";
 import { ButtonFileAudioUpload } from "./button.upload";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import { Typography } from "@mui/material";
 interface IProps {
 	setValue: (v: number) => void;
 	setTrackUpload: any;
@@ -80,6 +81,7 @@ const Step1 = (props: IProps) => {
 				<h4>Files</h4>
 				<ul>{files}</ul>
 			</aside>
+			<Typography color="text.disabled">"We're sorry — the upload feature is currently not available in the live version. We're working to resolve this soon."</Typography>
 		</section>
 	);
 };
