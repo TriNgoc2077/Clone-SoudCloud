@@ -345,7 +345,7 @@ const Playlist = ({ playlists, session, tracks }: IProps) => {
                     My Playlists
                   </Typography>
                   <Typography variant="h6" sx={{ opacity: 0.9 }}>
-                    {playlists?.length || 0} playlists • {tracks?.length || 0} tracks available
+                    {playlists?.length || 0} playlists • {playlists.reduce((accumulator, playlist) => {return accumulator + playlist.tracks.length}, 0) || 0} tracks available
                   </Typography>
                 </Box>
               </Stack>
@@ -433,17 +433,17 @@ const Playlist = ({ playlists, session, tracks }: IProps) => {
                           </Stack>
                           
                           <Stack direction="row" spacing={1}>
-                            <Tooltip title="Share Playlist">
+                            <Tooltip title="Share Playlist" onClick={() => toast.warning("Under development !")}>
                               <IconButton sx={{ color: pink[400] }}>
                                 <ShareIcon />
                               </IconButton>
                             </Tooltip>
-                            <Tooltip title="Add to Favorites">
+                            <Tooltip title="Add to Favorites" onClick={() => toast.warning("Under development !")}>
                               <IconButton sx={{ color: pink[400] }}>
                                 <FavoriteIcon />
                               </IconButton>
                             </Tooltip>
-                            <IconButton sx={{ color: pink[400] }}>
+                            <IconButton sx={{ color: pink[400] }} onClick={() => toast.warning("Under development !")}>
                               <MoreVertIcon />
                             </IconButton>
                           </Stack>
