@@ -1,6 +1,7 @@
 import Search from "@/components/search/search";
 import { Container } from "@mui/material";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
 	title: "Search your track",
@@ -9,9 +10,11 @@ export const metadata: Metadata = {
 
 const SearchPage = () => {
     return (
-        <Container sx={{mt: 3}}>
-            <Search />
-        </Container>
+        <Suspense>
+            <Container sx={{mt: 3}}>
+                <Search />
+            </Container>
+        </Suspense>
     )
 }
 

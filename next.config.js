@@ -27,6 +27,9 @@ const nextConfig = {
 	images: {
 		domains: ['backend-soundcloud.onrender.com'],
 	},
+	experimental: {
+		missingSuspenseWithCSRBailout: false,
+	},
 };
 
 module.exports = nextConfig;

@@ -2,6 +2,7 @@ import WaveTrack from "@/components/track/wave.track";
 import { sendRequest } from "@/utils/api";
 import Container from "@mui/material/Container";
 import type { Metadata, ResolvingMetadata } from "next";
+import { Suspense } from "react";
 
 type Props = {
 	params: { slug: string };
@@ -70,14 +71,16 @@ const DetailTrackPage = async (props: any) => {
 	// await new Promise(resolve => setTimeout(resolve, 3000))
 
 	return (
-		<Container>
-			<div>
-				<WaveTrack
-					track={res.data ?? null}
-					comments={resComments.data?.result ?? null}
-				/>
-			</div>
-		</Container>
+		<Suspense>
+			<Container>
+				<div>
+					<WaveTrack
+						track={res.data ?? null}
+						comments={resComments.data?.result ?? null}
+					/>
+				</div>
+			</Container>
+		</Suspense>
 	);
 };
 
