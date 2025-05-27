@@ -6,7 +6,7 @@
 
 <p align="center"><strong>A powerful React framework</strong> for building fast, modern, and full-stack web applications.</p>
 
-### Deployed at:
+### Deployed at: https://clone-soundcloud.vercel.app/
 
 ### Test Account: caonguyentringoc@gmail.com 123456
 

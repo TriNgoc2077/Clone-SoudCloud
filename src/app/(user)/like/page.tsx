@@ -1,4 +1,4 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/app/api/auth/auth.options';
 import Like from '@/components/like/like';
 import { sendRequest } from '@/utils/api';
 import { Container } from '@mui/material';

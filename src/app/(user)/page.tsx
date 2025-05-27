@@ -5,7 +5,7 @@ import { Container } from "@mui/material";
 import { sendRequestJS } from "@/utils/old.api";
 import { sendRequest } from "@/utils/api";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "../api/auth/auth.options";
 
 export default async function HomePage() {
 	const session = await getServerSession(authOptions);

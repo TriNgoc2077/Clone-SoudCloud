@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { sendRequest } from "@/utils/api";
 import { useRouter } from "next/navigation";
+import { handleLikeTrackAction } from "@/utils/actions/actions";
 const pinkColor = '#ec407a';
 const lightPinkBackground = '#fce4ec';
 
@@ -37,27 +38,10 @@ const LikeTrack = (props: any) => {
         }
     } 
     const handleLike = async () => {
-        const res = await sendRequest<IBackendRes<IModelPaginate<ITrackLike>>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/likes`,
-            method: "POST",
-            body: {
-                track: track?._id,
-                quantity: trackLikes?.some(t => t._id === track?._id) ? -1 : 1
-            },
-            headers: {
-                Authorization: `Bearer ${session?.access_token}`
-            }
-        })
+        const id = track?._id;
+        const quantity = trackLikes?.some(t => t._id === track?._id) ? -1 : 1;
+        await handleLikeTrackAction(id, quantity)
         fetchData();
-
-        await sendRequest<IBackendRes<any>>({
-            url: `/api/revalidate`,
-            method: "POST",
-            queryParams: {
-                tag: "track-by-id",
-                secret: "justARandomString"
-            }
-        });
         router.refresh();
 	}
     return (
