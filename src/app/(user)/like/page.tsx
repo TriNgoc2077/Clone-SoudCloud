@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const LikePage = async () => {
   const session = await getServerSession(authOptions);
-  const tracks = await sendRequest<IBackendRes<IModelPaginate<ITrackTop>>>({
+  const tracks = await sendRequest<IBackendRes<IModelPaginate<IShareTrack>>>({
     url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/likes`,
     method: "GET",
     queryParams: { current: 1, pageSize: 100 },
