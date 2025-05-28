@@ -59,6 +59,11 @@ declare global {
         setCurrentTrack: (v: IShareTrack) => void;
         currentTime: number;
         setCurrentTime: (time: number) => void;
+        playlist: IShareTrack[];
+        setPlaylist: (tracks: IShareTrack[]) => void;
+        currentIndex: number;
+        setCurrentIndex: (index: number) => void;
+        nextTrack: () => void;
     }
 
     interface IComment {

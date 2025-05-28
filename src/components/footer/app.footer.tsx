@@ -19,6 +19,8 @@ import "./style.css";
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { TrackContext } from "@/lib/track.wrapper";
 import { pink, purple } from "@mui/material/colors";
+import { sendRequest } from "@/utils/api";
+import { resolve } from "path";
 
 // Enhanced Styled Components
 const GlassFooter = styled(AppBar)(({ theme }) => ({
@@ -116,7 +118,7 @@ const EnhancedTrackAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 const Footer = () => {
-  const { currentTrack, setCurrentTrack, currentTime, setCurrentTime } = useContext(
+  const { currentTrack, setCurrentTrack, currentTime, setCurrentTime, nextTrack, setPlaylist } = useContext(
     TrackContext
   ) as ITrackContext;
   const playerRef = useRef<any>(null);
@@ -138,6 +140,33 @@ const Footer = () => {
       audio.pause();
     }
   }, [currentTrack, isPlayerReady]);
+
+  useEffect(() => {
+    const fetchTrack = async (category: string) => {
+      const res = await sendRequest<IBackendRes<IShareTrack[]>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/top`,
+        method: "POST",
+        body: {
+          category: category,
+          limit: 40,
+        },
+      });
+      if (res.data) {
+        const updatedTracks = res.data.map(track => ({
+          ...track,
+          isPlaying: false,
+        }));
+  
+        const reorderedTracks = [
+          currentTrack,
+          ...updatedTracks.filter(track => track._id !== currentTrack._id),
+        ];
+  
+        setPlaylist(reorderedTracks);
+      }
+    }
+    fetchTrack(currentTrack.category);
+  }, [currentTrack]);
     
   // Sync jump with wavesurfer
   useEffect(() => {
@@ -373,6 +402,9 @@ const Footer = () => {
                           ...currentTrack,
                           isPlaying: false,
                         });
+                      }}
+                      onEnded={() => {
+                        nextTrack();
                       }}
                       onVolumeChange={handleVolumeChange}
                       volume={0.7} // Set default volume

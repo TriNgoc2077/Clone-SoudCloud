@@ -35,7 +35,7 @@ const WaveTrack = (props: IProps) => {
 	const isIncrease = useRef(false);
 	const router = useRouter();
 
-	const { currentTrack, setCurrentTrack, currentTime, setCurrentTime } = React.useContext(
+	const { currentTrack, setCurrentTrack, currentTime, setCurrentTime, nextTrack } = React.useContext(
 		TrackContext
 	) as ITrackContext;
 
@@ -192,6 +192,11 @@ const WaveTrack = (props: IProps) => {
 				setTime(formatTime(time));
 				setCurrentTime(time);
 			}),
+			// wavesurfer.on("finish", () => {
+			// 	if (currentTrack._id === track?._id) {
+			// 	}
+			// 	nextTrack();
+			// })
 		];
 		return () => {
 			subscriptions.forEach((unsub) => unsub());
