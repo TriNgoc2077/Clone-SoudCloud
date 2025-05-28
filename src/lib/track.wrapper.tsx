@@ -35,12 +35,21 @@ export const TrackContextProvider = ({
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
 	// setCurrentTrack(playlist[currentIndex]);
 	const nextTrack = () => {
-		console.log(playlist);
 		if (currentIndex < playlist.length - 1) {
 			setCurrentTrack({...playlist[currentIndex + 1], isPlaying: true})
 			setCurrentIndex(currentIndex + 1);
 		} else {
 			setCurrentIndex(0);
+		}
+	}
+
+	const prevTrack = () => {
+		console.log(currentIndex);
+		if (currentIndex > 0) {
+			setCurrentTrack({...playlist[currentIndex - 1], isPlaying: true})
+			setCurrentIndex(currentIndex - 1);
+		} else {
+			setCurrentIndex(playlist.length - 1);
 		}
 	}
 	// useEffect(() => {
@@ -57,7 +66,8 @@ export const TrackContextProvider = ({
 				setCurrentIndex,
 				playlist,
 				setPlaylist,
-				nextTrack
+				nextTrack,
+				prevTrack
 			}}>
 			{children}
 		</TrackContext.Provider>

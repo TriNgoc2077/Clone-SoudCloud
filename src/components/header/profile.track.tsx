@@ -26,7 +26,7 @@ interface IProps {
 const ProfileTrack = (props: IProps) => {
 	const { track, tracks } = props;
 	const theme = useTheme();
-	const { currentTrack, setCurrentTrack, setPlaylist } = useContext(
+	const { currentTrack, setCurrentTrack, setPlaylist, nextTrack, prevTrack } = useContext(
 		TrackContext
 	) as ITrackContext;
 
@@ -318,9 +318,9 @@ const ProfileTrack = (props: IProps) => {
 								}}
 							>
 								{theme.direction === "rtl" ? (
-									<SkipNextIcon />
+									<SkipNextIcon onClick={() => {nextTrack()}}/>
 								) : (
-									<SkipPreviousIcon />
+									<SkipPreviousIcon onClick={() => {prevTrack()}} />
 								)}
 							</IconButton>
 
@@ -391,9 +391,9 @@ const ProfileTrack = (props: IProps) => {
 								}}
 							>
 								{theme.direction === "rtl" ? (
-									<SkipPreviousIcon />
+									<SkipPreviousIcon onClick={() => {prevTrack()}} />
 								) : (
-									<SkipNextIcon />
+									<SkipNextIcon onClick={() => {nextTrack()}}/>
 								)}
 							</IconButton>
 						</Box>

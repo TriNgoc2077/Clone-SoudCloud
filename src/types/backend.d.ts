@@ -64,6 +64,7 @@ declare global {
         currentIndex: number;
         setCurrentIndex: (index: number) => void;
         nextTrack: () => void;
+        prevTrack: () => void;
     }
 
     interface IComment {

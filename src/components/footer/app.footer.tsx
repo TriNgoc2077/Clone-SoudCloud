@@ -118,7 +118,7 @@ const EnhancedTrackAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 const Footer = () => {
-  const { currentTrack, setCurrentTrack, currentTime, setCurrentTime, nextTrack, playlist, setPlaylist } = useContext(
+  const { currentTrack, setCurrentTrack, currentTime, setCurrentTime, nextTrack, playlist, setPlaylist, prevTrack } = useContext(
     TrackContext
   ) as ITrackContext;
   const playerRef = useRef<any>(null);
@@ -411,7 +411,7 @@ const Footer = () => {
                         nextTrack();
                       }}
                       onVolumeChange={handleVolumeChange}
-                      volume={0.7} // Set default volume
+                      volume={0.8} // Set default volume
                       style={{
                         backgroundColor: "transparent",
                         boxShadow: "unset",
