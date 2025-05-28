@@ -118,7 +118,7 @@ const EnhancedTrackAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 const Footer = () => {
-  const { currentTrack, setCurrentTrack, currentTime, setCurrentTime, nextTrack, setPlaylist } = useContext(
+  const { currentTrack, setCurrentTrack, currentTime, setCurrentTime, nextTrack, playlist, setPlaylist } = useContext(
     TrackContext
   ) as ITrackContext;
   const playerRef = useRef<any>(null);
@@ -165,7 +165,11 @@ const Footer = () => {
         setPlaylist(reorderedTracks);
       }
     }
-    fetchTrack(currentTrack.category);
+
+    //if !playlist -> fetch
+    if (playlist.length === 0) {
+      fetchTrack(currentTrack.category);
+    }
   }, [currentTrack]);
     
   // Sync jump with wavesurfer

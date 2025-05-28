@@ -101,7 +101,7 @@ declare global {
         title: string,
         isPublic: true,
         user: string,
-        tracks: any[],
+        tracks: IShareTrack[],
         isDeleted: boolean,
         _id: string,
         createdAt: string,

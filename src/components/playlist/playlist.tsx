@@ -251,7 +251,7 @@ const Playlist = ({ playlists, session, tracks }: IProps) => {
   const [tracksSelected, setTracksSelected] = React.useState<string[]>([]);
   const [title, setTitle] = React.useState("");
   const [isPublic, setIsPublic] = React.useState(true);
-  const { currentTrack, setCurrentTrack } = React.useContext(TrackContext) as ITrackContext;
+  const { currentTrack, setCurrentTrack, setPlaylist } = React.useContext(TrackContext) as ITrackContext;
   // const [currentTrack, setCurrentTrack] = React.useState({ _id: '', isPlaying: false });
 
   const ITEM_HEIGHT = 48;
@@ -489,8 +489,18 @@ const Playlist = ({ playlists, session, tracks }: IProps) => {
                                     size="small"
                                     onClick={() => {
                                       if (track._id !== currentTrack._id) {
-                                        currentTrack.isPlaying = false;
+                                        setCurrentTrack({...currentTrack, isPlaying: false})
                                       }
+                                      const updatedTracks = tracks.map(track => ({
+                                        ...track,
+                                        isPlaying: false,
+                                      }));
+                                
+                                      const reorderedTracks = [
+                                        track,
+                                        ...updatedTracks.filter(t => t._id !== track._id),
+                                      ];
+                                      setPlaylist(reorderedTracks);
                                       setCurrentTrack({ ...track, isPlaying: !currentTrack.isPlaying });
                                     }}
                                     sx={{ width: 40, height: 40 }}

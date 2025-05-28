@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 export const TrackContext = createContext<ITrackContext | null>(null);
 
@@ -35,6 +35,7 @@ export const TrackContextProvider = ({
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
 	// setCurrentTrack(playlist[currentIndex]);
 	const nextTrack = () => {
+		console.log(playlist);
 		if (currentIndex < playlist.length - 1) {
 			setCurrentTrack({...playlist[currentIndex + 1], isPlaying: true})
 			setCurrentIndex(currentIndex + 1);
@@ -42,7 +43,9 @@ export const TrackContextProvider = ({
 			setCurrentIndex(0);
 		}
 	}
-
+	// useEffect(() => {
+	// 	console.log("Playlist has changed", playlist);
+	//   }, [playlist]);
 	return (
 		<TrackContext.Provider 
 			value={{ 

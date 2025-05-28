@@ -1,5 +1,4 @@
 "use client";
-import * as React from "react";
 import { rgbToHex, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -15,22 +14,24 @@ import SkipNextIcon from "@mui/icons-material/SkipNext";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { TrackContext } from "@/lib/track.wrapper";
 import { convertSlugUrl } from "@/utils/api";
+import { TrackContext } from "@/lib/track.wrapper";
+import { useContext, useState } from "react";
 
 interface IProps {
-	data: ITrackTop;
+	track: IShareTrack;
+	tracks: IShareTrack[];
 }
 
 const ProfileTrack = (props: IProps) => {
-	const { data } = props;
+	const { track, tracks } = props;
 	const theme = useTheme();
-	const { currentTrack, setCurrentTrack } = React.useContext(
+	const { currentTrack, setCurrentTrack, setPlaylist } = useContext(
 		TrackContext
 	) as ITrackContext;
 
-	const [isHovered, setIsHovered] = React.useState(false);
-	const isCurrentTrack = data._id === currentTrack._id;
+	const [isHovered, setIsHovered] = useState(false);
+	const isCurrentTrack = track._id === currentTrack._id;
 	const isPlaying = isCurrentTrack && currentTrack.isPlaying;
 
 	return (
@@ -129,8 +130,8 @@ const ProfileTrack = (props: IProps) => {
 						objectFit: "cover",
 						transition: "all 0.4s ease",
 					}}
-					image={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${data.imgUrl}`}
-					alt={data.title}
+					image={`${process.env.NEXT_PUBLIC_BACKEND_URL}/images/${track.imgUrl}`}
+					alt={track.title}
 				/>
 
 				{/* Overlay for playing state */}
@@ -235,9 +236,9 @@ const ProfileTrack = (props: IProps) => {
 					<Typography
 						component="a"
 						variant="h5"
-						href={`/track/${convertSlugUrl(data.title)}-${
-							data._id
-						}.html?audio=${data.trackUrl}`}
+						href={`/track/${convertSlugUrl(track.title)}-${
+							track._id
+						}.html?audio=${track.trackUrl}`}
 						sx={{
 							textDecoration: "none",
 							color: isPlaying ? "white" : "#2d3748",
@@ -259,7 +260,7 @@ const ProfileTrack = (props: IProps) => {
 							},
 						}}
 					>
-						{data.title}
+						{track.title}
 					</Typography>
 
 					{/* Track Description */}
@@ -281,7 +282,7 @@ const ProfileTrack = (props: IProps) => {
 							WebkitBoxOrient: "vertical",
 						}}
 					>
-						{data.description}
+						{track.description}
 					</Typography>
 
 					{/* Action Buttons Row */}
@@ -327,13 +328,20 @@ const ProfileTrack = (props: IProps) => {
 							<IconButton
 								aria-label="play/pause"
 								onClick={() => {
-									if (data._id !== currentTrack._id) {
-										currentTrack.isPlaying = false;
-									}
-									setCurrentTrack({
-										...data,
-										isPlaying: !currentTrack.isPlaying,
-									});
+									if (track._id !== currentTrack._id) {
+										setCurrentTrack({...currentTrack, isPlaying: false})
+									  }
+									  const updatedTracks = tracks.map(track => ({
+										...track,
+										isPlaying: false,
+									  }));
+								
+									  const reorderedTracks = [
+										track,
+										...updatedTracks.filter(t => t._id !== track._id),
+									  ];
+									  setPlaylist(reorderedTracks);
+									  setCurrentTrack({ ...track, isPlaying: !currentTrack.isPlaying });
 								}}
 								sx={{
 									width: { xs: 50, sm: 60 }, // Smaller on mobile

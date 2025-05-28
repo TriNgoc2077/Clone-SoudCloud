@@ -1,11 +1,15 @@
+"use client";
 import { Box, Card, CardActionArea, CardContent, CardMedia, Grid, Link, Typography, Chip, Stack } from "@mui/material";
 import { Favorite, PlayCircleFilled } from "@mui/icons-material";
+import { useContext } from "react";
+import { TrackContext } from "@/lib/track.wrapper";
 
 interface IProps {
-  tracks: ITrackTop[];
+  tracks: IShareTrack[];
 }
 
 const Like = ({ tracks }: IProps) => {
+  const { currentTrack, setCurrentTrack, setPlaylist } = useContext(TrackContext) as ITrackContext;
   return (
     <Box sx={{ 
       padding: { xs: 2, md: 4 },
@@ -60,7 +64,7 @@ const Like = ({ tracks }: IProps) => {
               }}>
                 <CardActionArea
                   component={Link}
-                  href={`/track/${track.title}-${track._id}.html?audio=${track.trackUrl}`}
+                  // href={`#`}
                   underline="none"
                 >
                   {/* Play icon overlay */}
@@ -81,11 +85,31 @@ const Like = ({ tracks }: IProps) => {
                       opacity: 1
                     }
                   }}>
-                    <PlayCircleFilled sx={{ 
-                      fontSize: 60, 
-                      color: "white",
-                      filter: "drop-shadow(0 0 8px rgba(0,0,0,0.5))"
-                    }} />
+                    <Box 
+                      onClick={() => {
+                        if (track._id !== currentTrack._id) {
+                          setCurrentTrack({...currentTrack, isPlaying: false})
+                        }
+                        const updatedTracks = tracks.map(track => ({
+                          ...track,
+                          isPlaying: false,
+                        }));
+                  
+                        const reorderedTracks = [
+                          track,
+                          ...updatedTracks.filter(t => t._id !== track._id),
+                        ];
+                        setPlaylist(reorderedTracks);
+                        setCurrentTrack({ ...track, isPlaying: !currentTrack.isPlaying });
+                      }}
+                    >
+                      <PlayCircleFilled sx={{ 
+                        fontSize: 60, 
+                        color: "white",
+                        filter: "drop-shadow(0 0 8px rgba(0,0,0,0.5))"
+                        
+                      }} />
+                    </Box>
                   </Box>
                   
                   <CardMedia
@@ -98,37 +122,43 @@ const Like = ({ tracks }: IProps) => {
                       position: "relative"
                     }}
                   />
-                  
-                  <CardContent sx={{
-                    background: "linear-gradient(to bottom, #ffffff, #f8f9fa)",
-                    borderTop: "1px solid rgba(0,0,0,0.05)"
-                  }}>
-                    <Typography 
-                      variant="h6" 
-                      noWrap 
-                      textAlign="center" 
-                      fontWeight={600}
-                      sx={{ color: "#2d3748" }}
-                    >
-                      {track.title}
-                    </Typography>
-                    
-                    <Stack direction="row" spacing={1} justifyContent="center" mt={1}>
-                      <Chip 
-                        label={`${track.countLike} Likes`} 
-                        size="small" 
-                        icon={<Favorite fontSize="small" />}
-                        color="secondary"
-                      />
-                      <Chip 
-                        label={track.category} 
-                        size="small" 
-                        variant="outlined"
-                        sx={{ borderColor: "#4caf50", color: "#4caf50" }}
-                      />
-                    </Stack>
-                  </CardContent>
                 </CardActionArea>
+                
+                <CardActionArea
+                  component={Link}
+                  href={`/track/${track.title}-${track._id}.html?audio=${track.trackUrl}`}
+                  underline="none"
+                >
+                  <CardContent sx={{
+                      background: "linear-gradient(to bottom, #ffffff, #f8f9fa)",
+                      borderTop: "1px solid rgba(0,0,0,0.05)"
+                    }}>
+                      <Typography 
+                        variant="h6" 
+                        noWrap 
+                        textAlign="center" 
+                        fontWeight={600}
+                        sx={{ color: "#2d3748" }}
+                      >
+                        {track.title}
+                      </Typography>
+                      
+                      <Stack direction="row" spacing={1} justifyContent="center" mt={1}>
+                        <Chip 
+                          label={`${track.countLike} Likes`} 
+                          size="small" 
+                          icon={<Favorite fontSize="small" />}
+                          color="secondary"
+                        />
+                        <Chip 
+                          label={track.category} 
+                          size="small" 
+                          variant="outlined"
+                          sx={{ borderColor: "#4caf50", color: "#4caf50" }}
+                        />
+                      </Stack>
+                    </CardContent>
+                  </CardActionArea>
               </Card>
             </Grid>
           ))}

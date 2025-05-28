@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "profile"
 }
 const ProfilePage = async ({ params }: { params: { slug: string } }) => {
-	const res = await sendRequest<IBackendRes<IModelPaginate<ITrackTop>>>({
+	const res = await sendRequest<IBackendRes<IModelPaginate<IShareTrack>>>({
 		url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/tracks/users?pageSize=5000&current=1`,
 		method: "POST",
 		body: { id: params.slug },
@@ -20,10 +20,10 @@ const ProfilePage = async ({ params }: { params: { slug: string } }) => {
 	return (
 		<Container>
 			<Grid container spacing={5}>
-				{tracks.map((track: ITrackTop, index: number) => {
+				{tracks.map((track: IShareTrack, index: number) => {
 					return (
 						<Grid item xs={12} md={6} key={index}>
-							<ProfileTrack data={track} />
+							<ProfileTrack track={track} tracks={tracks}  />
 						</Grid>
 					);
 				})}
