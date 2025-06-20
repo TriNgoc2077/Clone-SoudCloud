@@ -341,7 +341,7 @@ const ProfileTrack = (props: IProps) => {
 										...updatedTracks.filter(t => t._id !== track._id),
 									  ];
 									  setPlaylist(reorderedTracks);
-									  setCurrentTrack({ ...track, isPlaying: !currentTrack.isPlaying });
+									  setCurrentTrack({ ...track, isPlaying: true });
 								}}
 								sx={{
 									width: { xs: 50, sm: 60 }, // Smaller on mobile
